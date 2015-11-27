@@ -1,0 +1,23 @@
+{
+  "description": "ASP.NET 5 Middleware to validate access tokens from IdentityServer",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git"
+  },
+
+  "dependencies": {
+    "Microsoft.AspNet.Authentication": "1.0.0-rc1-final"
+  },
+
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Net.Http": ""
+      }
+    },
+
+    "dotnet5.4": {
+      "System.Net.Http": "4.0.1-beta-23516"
+    }
+  }
+}
