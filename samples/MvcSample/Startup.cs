@@ -25,6 +25,8 @@ namespace MvcSample
 
             var introceptionOptions = new IntrospectionEndpointOptions
             {
+                ScopeName = "read",
+                ScopeSecret = "secret",
                 ValidationResultCacheDuration = TimeSpan.FromSeconds(30)
             };
 
