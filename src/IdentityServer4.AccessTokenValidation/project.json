@@ -1,28 +1,25 @@
-{
-  "description": "ASP.NET 5 Middleware to validate access tokens from IdentityServer",
-  "version": "4.0.0",
-  "repository": {
-    "type": "git"
-  },
+﻿{
+  "version": "1.0.0-alpha1",
+  "description": "ASP.NET 5 Authentication Middleware for IdentityServer Tokens",
+  "authors": [ "Dominick Baier", "Brock Allen", "Tugberk Ugurlu" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
 
   "dependencies": {
-    "Microsoft.AspNet.Authentication": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Caching.Memory": "1.0.0-rc1-final",
-    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0-rc1-final",
-    "Microsoft.AspNet.Authentication.JwtBearer":  "1.0.0-rc1-final",
+    "Microsoft.AspNet.Authentication":  "1.0.0-rc1-final",
     "IdentityModel": "2.0.0-alpha1"
   },
 
   "frameworks": {
-    "dnx451": {
-      "frameworkAssemblies": {
-        "System.Net.Http": ""
-      }
-    },
-
-    "dnxcore50": {
+    "net451": { },
+    "dotnet5.4": {
       "dependencies": {
-        "System.Net.Http": "4.0.1-beta-23516"
+        "Microsoft.CSharp": "4.0.1-beta-23516",
+        "System.Collections": "4.0.11-beta-23516",
+        "System.Linq": "4.0.1-beta-23516",
+        "System.Runtime": "4.0.21-beta-23516",
+        "System.Threading": "4.0.11-beta-23516"
       }
     }
   }
