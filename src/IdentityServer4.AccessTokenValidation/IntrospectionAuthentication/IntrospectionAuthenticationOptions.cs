@@ -2,9 +2,9 @@
 
 namespace IdentityServer4.AccessTokenValidation
 {
-    public class IntrospectionEndpointOptions : AuthenticationOptions
+    public class IntrospectionAuthenticationOptions : AuthenticationOptions
     {
-        public IntrospectionEndpointOptions()
+        public IntrospectionAuthenticationOptions()
         {
             AuthenticationScheme = "Bearer";
         }
@@ -12,5 +12,8 @@ namespace IdentityServer4.AccessTokenValidation
         public string Authority { get; set; }
         public string ScopeName { get; set; }
         public string ScopeSecret { get; set; }
+
+        public bool SkipTokensWithDots { get; set; } = true;
+        public bool PreserveAccessToken { get; set; } = true;
     }
 }

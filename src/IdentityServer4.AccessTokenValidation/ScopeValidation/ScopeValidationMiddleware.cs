@@ -12,18 +12,18 @@ namespace IdentityServer4.AccessTokenValidation
     /// <summary>
     /// Middleware to check for scope claims in principal
     /// </summary>
-    public class ScopeRequirementMiddleware
+    public class ScopeValidationMiddleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger _logger;
         private readonly ScopeValidationOptions _options;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScopeRequirementMiddleware"/> class.
+        /// Initializes a new instance of the <see cref="ScopeValidationMiddleware"/> class.
         /// </summary>
         /// <param name="next">The next midleware.</param>
         /// <param name="scopes">The scopes.</param>
-        public ScopeRequirementMiddleware(RequestDelegate next, ScopeValidationOptions options, ILogger<ScopeRequirementMiddleware> logger)
+        public ScopeValidationMiddleware(RequestDelegate next, ScopeValidationOptions options, ILogger<ScopeValidationMiddleware> logger)
         {
             if (next == null)
             {

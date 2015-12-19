@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace IdentityServer4.AccessTokenValidation
 {
-    public class IntrospectionAuthenticationHandler : AuthenticationHandler<IntrospectionEndpointOptions>
+    public class IntrospectionAuthenticationHandler : AuthenticationHandler<IntrospectionAuthenticationOptions>
     {
         private readonly IntrospectionClient _client;
 
@@ -42,6 +42,11 @@ namespace IdentityServer4.AccessTokenValidation
                 return AuthenticateResult.Failed("No bearer token.");
             }
 
+            if (token.Contains('.') && Options.SkipTokensWithDots)
+            {
+                return AuthenticateResult.Failed("Token contains a dot. Skipping.");
+            }
+
             var response = await _client.SendAsync(new IntrospectionRequest
             {
                 Token = token
@@ -54,7 +59,15 @@ namespace IdentityServer4.AccessTokenValidation
 
             if (response.IsActive)
             {
-                var claims = new List<Claim>(response.Claims.Select(c => new Claim(c.Item1, c.Item2)));
+                var claims = new List<Claim>(response.Claims
+                    .Where(c => c.Item1 != "active")
+                    .Select(c => new Claim(c.Item1, c.Item2)));
+
+                if (Options.PreserveAccessToken)
+                {
+                    claims.Add(new Claim("token", token));
+                }
+
                 var id = new ClaimsIdentity(claims, Options.AuthenticationScheme);
                 var principal = new ClaimsPrincipal(id);
 
