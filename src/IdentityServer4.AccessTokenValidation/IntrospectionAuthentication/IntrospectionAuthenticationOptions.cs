@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNet.Authentication;
+using Microsoft.AspNet.Http;
+using System;
 
 namespace IdentityServer4.AccessTokenValidation
 {
@@ -15,5 +17,6 @@ namespace IdentityServer4.AccessTokenValidation
 
         public bool SkipTokensWithDots { get; set; } = true;
         public bool PreserveAccessToken { get; set; } = true;
+        public Func<HttpRequest, string> TokenRetriever { get; set; } = TokenRetrieval.FromAuthorizationHeader();
     }
 }

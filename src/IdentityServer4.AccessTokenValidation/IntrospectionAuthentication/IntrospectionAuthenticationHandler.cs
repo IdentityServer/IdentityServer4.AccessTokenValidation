@@ -1,7 +1,6 @@
 ﻿using IdentityModel.Client;
 using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Http.Authentication;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -20,24 +19,9 @@ namespace IdentityServer4.AccessTokenValidation
 
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            string token = null;
+            string token = Options.TokenRetriever(Context.Request);
 
-            // todo add hook to get token from elsewhere
-            string authorization = Request.Headers["Authorization"];
-
-            // If no authorization header found, nothing to process further
-            if (string.IsNullOrEmpty(authorization))
-            {
-                return AuthenticateResult.Failed("No bearer token.");
-            }
-
-            if (authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
-            {
-                token = authorization.Substring("Bearer ".Length).Trim();
-            }
-
-            // If no token found, no further work possible
-            if (string.IsNullOrEmpty(token))
+            if (token.IsMissing())
             {
                 return AuthenticateResult.Failed("No bearer token.");
             }
