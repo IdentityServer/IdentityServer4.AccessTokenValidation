@@ -40,15 +40,15 @@
 
 // NOTE: uncomment the following line if you are compiling under Window Metro style application/library.
 // usually already defined in properties
-#define NETFX_CORE
+//#define NETFX_CORE
 
 // If you are targetting WinStore, WP8 and NET4.5+ PCL make sure to #define SIMPLE_JSON_TYPEINFO;
 
 // original json parsing code from http://techblog.procurios.nl/k/618/news/view/14605/14863/How-do-I-write-my-own-parser-for-JSON.html
 
-#if NETFX_CORE
+//#if NETFX_CORE
 #define SIMPLE_JSON_TYPEINFO
-#endif
+//#endif
 
 using System;
 using System.CodeDom.Compiler;
