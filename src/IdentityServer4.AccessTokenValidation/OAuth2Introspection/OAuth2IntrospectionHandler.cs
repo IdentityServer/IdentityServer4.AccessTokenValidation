@@ -54,7 +54,7 @@ namespace IdentityServer4.AccessTokenValidation
                     claims.Add(new Claim("token", token));
                 }
 
-                var id = new ClaimsIdentity(claims, Options.AuthenticationScheme);
+                var id = new ClaimsIdentity(claims, Options.AuthenticationScheme, Options.NameClaimType, Options.RoleClaimType);
                 var principal = new ClaimsPrincipal(id);
 
                 var ticket = new AuthenticationTicket(principal, new AuthenticationProperties(), Options.AuthenticationScheme);

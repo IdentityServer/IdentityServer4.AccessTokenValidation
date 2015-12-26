@@ -4,6 +4,9 @@ using Microsoft.AspNet.Builder;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.WebEncoders;
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace IdentityServer4.AccessTokenValidation
@@ -50,22 +53,45 @@ namespace IdentityServer4.AccessTokenValidation
                 endpoint = GetIntrospectionEndpointFromDiscoveryDocument();
             }
 
+            IntrospectionClient client;
             if (Options.IntrospectionHttpHandler != null)
             {
-                return new IntrospectionClient(
+                client = new IntrospectionClient(
                     endpoint,
                     innerHttpMessageHandler: Options.IntrospectionHttpHandler);
             }
             else
             {
-                return new IntrospectionClient(endpoint);
+                client = new IntrospectionClient(endpoint);
             }
+
+            client.Timeout = Options.DiscoveryTimeout;
+            return client;
         }
 
         private string GetIntrospectionEndpointFromDiscoveryDocument()
         {
             // todo: use discovery document
-            return Options.Authority.EnsureTrailingSlash() + "connect/introspect";
+            //return Options.Authority.EnsureTrailingSlash() + "connect/introspect";
+
+            HttpClient client;
+
+            if (Options.DiscoveryHttpHandler != null)
+            {
+                client = new HttpClient(Options.DiscoveryHttpHandler);
+            }
+            else
+            {
+                client = new HttpClient();
+            }
+
+            client.Timeout = Options.DiscoveryTimeout;
+
+            var discoEndpoint = Options.Authority.EnsureTrailingSlash() + ".well-known/openid-configuration";
+            var response = AsyncHelper.RunSync<string>(() => client.GetStringAsync(discoEndpoint));
+
+            var json = (IDictionary<string, object>)SimpleJson.SimpleJson.DeserializeObject(response);
+            return (string)json["introspection_endpoint"];
         }
 
         protected override AuthenticationHandler<OAuth2IntrospectionOptions> CreateHandler()
