@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace IdentityServer4.AccessTokenValidation
 {
-    public class IntrospectionAuthenticationHandler : AuthenticationHandler<IntrospectionAuthenticationOptions>
+    public class OAuth2IntrospectionHandler : AuthenticationHandler<OAuth2IntrospectionOptions>
     {
         private readonly IntrospectionClient _client;
 
-        public IntrospectionAuthenticationHandler(IntrospectionClient client)
+        public OAuth2IntrospectionHandler(IntrospectionClient client)
         {
             _client = client;
         }
@@ -33,7 +33,9 @@ namespace IdentityServer4.AccessTokenValidation
 
             var response = await _client.SendAsync(new IntrospectionRequest
             {
-                Token = token
+                Token = token,
+                ClientId = Options.ScopeName,
+                ClientSecret = Options.ScopeSecret
             });
 
             if (response.IsError)
@@ -47,7 +49,7 @@ namespace IdentityServer4.AccessTokenValidation
                     .Where(c => c.Item1 != "active")
                     .Select(c => new Claim(c.Item1, c.Item2)));
 
-                if (Options.PreserveAccessToken)
+                if (Options.SaveTokenAsClaim)
                 {
                     claims.Add(new Claim("token", token));
                 }
