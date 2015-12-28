@@ -1,0 +1,27 @@
+﻿{
+  "compilationOptions": {
+    "warningsAsErrors": true
+  },
+  "dependencies": {
+    "IdentityServer4.AccessTokenValidation": "",
+    "xunit": "2.1.0",
+    "xunit.runner.dnx": "2.1.0-rc1-build204",
+    "Microsoft.AspNet.Http": "1.0.0-rc1-final",
+    "FluentAssertions": "4.0.1"
+  },
+  "commands": {
+    "test": "xunit.runner.dnx"
+  },
+  "frameworks": {
+    "dnx451": {
+      "dependencies": {
+        "System.IdentityModel.Tokens.Jwt": "4.0.2.202250711"
+      }
+    },
+    "dnxcore50": {
+      "dependencies": {
+        "System.IdentityModel.Tokens.Jwt": "5.0.0-rc1-211161024"
+      }
+    }
+  }
+}

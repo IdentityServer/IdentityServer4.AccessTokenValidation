@@ -1,26 +1,19 @@
 ﻿{
-  "version": "1.0.0-alpha1",
+  "version": "1.0.0-alpha2",
   "description": "ASP.NET 5 Authentication Middleware for IdentityServer Tokens",
-  "authors": [ "Dominick Baier", "Brock Allen", "Tugberk Ugurlu" ],
-  "tags": [ "" ],
-  "projectUrl": "",
-  "licenseUrl": "",
+  "authors": [ "Dominick Baier", "Brock Allen" ],
+  "tags": [ "IdentityServer", "OAuth", "OAuth2", "OAuth 2.0", "OpenID Connect", "Claims", "Security", "Identity" ],
+  "projectUrl": "https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation",
+  "licenseUrl": "https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation/blob/master/LICENSE",
+  "iconUrl": "https://identityserver.github.io/Documentation/assets/images/icons/IDserver_icon128.jpg",
 
   "dependencies": {
-    "Microsoft.AspNet.Authentication":  "1.0.0-rc1-final",
-    "IdentityModel": "2.0.0-alpha2"
+    "IdentityModel.AspNet.OAuth2Introspection": "1.0.0-beta2",
+    "IdentityModel.AspNet.ScopeValidation": "1.0.0-beta1"
   },
 
   "frameworks": {
     "net451": { },
-    "dotnet5.4": {
-      "dependencies": {
-        "Microsoft.CSharp": "4.0.1-beta-23516",
-        "System.Collections": "4.0.11-beta-23516",
-        "System.Linq": "4.0.1-beta-23516",
-        "System.Runtime": "4.0.21-beta-23516",
-        "System.Threading": "4.0.11-beta-23516"
-      }
-    }
+    "dotnet5.4": { }
   }
 }
