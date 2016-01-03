@@ -9,11 +9,12 @@
 
   "dependencies": {
     "IdentityModel.AspNet.OAuth2Introspection": "1.0.0-beta2",
-    "IdentityModel.AspNet.ScopeValidation": "1.0.0-beta1"
+    "IdentityModel.AspNet.ScopeValidation": "1.0.0-beta1",
+    "Microsoft.AspNet.Authentication.JwtBearer": "1.0.0-rc1-final"
   },
 
   "frameworks": {
-    "net451": { },
-    "dotnet5.4": { }
+    "dnx451": { },
+    "dnxcore50": { }
   }
 }

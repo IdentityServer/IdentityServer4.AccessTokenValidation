@@ -1,22 +1,16 @@
 @echo off
 cd %~dp0
 
-SETLOCAL
-SET CACHED_NUGET=%LocalAppData%\NuGet\NuGet.exe
-
-IF EXIST %CACHED_NUGET% goto copynuget
-echo Downloading latest version of NuGet.exe...
-IF NOT EXIST %LocalAppData%\NuGet md %LocalAppData%\NuGet
-@powershell -NoProfile -ExecutionPolicy unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'https://www.nuget.org/nuget.exe' -OutFile '%CACHED_NUGET%'"
-
-:copynuget
 IF EXIST .nuget\nuget.exe goto restore
+
+echo Downloading nuget.exe
 md .nuget
-copy %CACHED_NUGET% .nuget\nuget.exe > nul
+@powershell -NoProfile -ExecutionPolicy unrestricted -Command "$ProgressPreference = 'SilentlyContinue'; Invoke-WebRequest 'https://dist.nuget.org/win-x86-commandline/latest/nuget.exe' -OutFile '.nuget\nuget.exe'"
 
 :restore
-IF EXIST packages\psake goto run
+IF EXIST packages goto run
 .nuget\NuGet.exe install psake -ExcludeVersion -o packages -nocache
+.nuget\NuGet.exe install newtonsoft.json -Version 7.0.1 -ExcludeVersion -o packages -nocache
 
 :run
 :: Get Psake to Return Non-Zero Return Code on Build Failure (https://github.com/psake/psake/issues/58)
