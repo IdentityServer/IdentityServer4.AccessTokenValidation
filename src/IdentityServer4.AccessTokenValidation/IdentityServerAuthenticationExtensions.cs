@@ -15,6 +15,14 @@ namespace Microsoft.AspNet.Builder
     {
         static Func<HttpRequest, string> _tokenRetriever = request => request.HttpContext.Items["idsrv4:tokenvalidation:token"] as string;
 
+        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, Action<IdentityServerAuthenticationOptions> configureOptions)
+        {
+            var options = new IdentityServerAuthenticationOptions();
+            configureOptions(options);
+
+            return app.UseIdentityServerAuthentication(options);
+        }
+
         public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, IdentityServerAuthenticationOptions options)
         {
             var combinedOptions = new CombinedAuthenticationOptions();
