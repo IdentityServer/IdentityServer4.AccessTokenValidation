@@ -59,7 +59,7 @@ namespace IdentityServer4.AccessTokenValidation
                     await _jwtNext(context);
                     return;
                 }
-                // otherwise use validation endpoint
+                // otherwise use introspection endpoint
                 if (_introspectionNext != null)
                 {
                     await _introspectionNext(context);
@@ -70,7 +70,7 @@ namespace IdentityServer4.AccessTokenValidation
             }
             else
             {
-                // use validation endpoint
+                // use introspection endpoint
                 if (_introspectionNext != null)
                 {
                     await _introspectionNext(context);

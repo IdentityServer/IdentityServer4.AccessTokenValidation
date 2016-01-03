@@ -1,13 +1,13 @@
-﻿using IdentityServer4.AccessTokenValidation;
+﻿using IdentityModel.AspNet.OAuth2Introspection;
+using IdentityModel.AspNet.ScopeValidation;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNet.Authentication.JwtBearer;
+using Microsoft.AspNet.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Authentication.JwtBearer;
-using IdentityModel.AspNet.OAuth2Introspection;
-using IdentityModel.AspNet.ScopeValidation;
-using Microsoft.AspNet.Http;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Microsoft.AspNet.Builder
 {
@@ -69,8 +69,20 @@ namespace Microsoft.AspNet.Builder
                 RoleClaimType = options.RoleClaimType,
 
                 TokenRetriever = _tokenRetriever,
-                SaveTokenAsClaim = options.SaveTokenAsClaim
+                SaveTokenAsClaim = options.SaveTokenAsClaim,
+
+                DiscoveryTimeout = options.BackChannelTimeouts,
+                IntrospectionTimeout = options.BackChannelTimeouts
             };
+
+            if (options.IntrospectionBackChannelHandler != null)
+            {
+                introspectionOptions.IntrospectionHttpHandler = options.IntrospectionBackChannelHandler;
+            }
+            if (options.IntrospectionDiscoveryHandler != null)
+            {
+                introspectionOptions.DiscoveryHttpHandler = options.IntrospectionDiscoveryHandler;
+            }
 
             return introspectionOptions;
         }
@@ -83,10 +95,10 @@ namespace Microsoft.AspNet.Builder
                 Authority = options.Authority,
                 RequireHttpsMetadata = false,
 
-
                 AutomaticAuthenticate = options.AutomaticAuthenticate,
                 AutomaticChallenge = options.AutomaticChallenge,
 
+                BackchannelTimeout = options.BackChannelTimeouts,
                 RefreshOnIssuerKeyNotFound = true,
 
                 Events = new JwtBearerEvents
@@ -106,6 +118,11 @@ namespace Microsoft.AspNet.Builder
                     }
                 }
             };
+
+            if (options.JwtBackChannelHandler != null)
+            {
+                jwtOptions.BackchannelHttpHandler = options.JwtBackChannelHandler;
+            }
 
             jwtOptions.TokenValidationParameters.ValidateAudience = false;
             jwtOptions.TokenValidationParameters.NameClaimType = options.NameClaimType;

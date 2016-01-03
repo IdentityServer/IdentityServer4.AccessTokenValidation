@@ -3,6 +3,7 @@ using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Http;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 namespace IdentityServer4.AccessTokenValidation
 {
@@ -26,5 +27,10 @@ namespace IdentityServer4.AccessTokenValidation
         public string RoleClaimType { get; set; } = "role";
 
         public bool SaveTokenAsClaim { get; set; } = true;
+
+        public HttpMessageHandler JwtBackChannelHandler { get; set; }
+        public HttpMessageHandler IntrospectionBackChannelHandler { get; set; }
+        public HttpMessageHandler IntrospectionDiscoveryHandler { get; set; }
+        public TimeSpan BackChannelTimeouts { get; set; } = TimeSpan.FromSeconds(60);
     }
 }
