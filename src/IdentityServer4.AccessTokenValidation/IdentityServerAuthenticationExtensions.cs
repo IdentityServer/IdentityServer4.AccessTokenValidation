@@ -46,16 +46,26 @@ namespace Microsoft.AspNet.Builder
 
             app.UseMiddleware<IdentityServerAuthenticationMiddleware>(app, combinedOptions);
 
-            if (!string.IsNullOrWhiteSpace(options.ScopeName) || options.AdditionalScopes.Any())
+            var allowedScopes = new List<string>();
+            if (!string.IsNullOrWhiteSpace(options.ScopeName))
             {
-                var allowedScopes = new List<string>(options.AdditionalScopes);
+                allowedScopes.Add(options.ScopeName);
+            }
 
-                if (!string.IsNullOrWhiteSpace(options.ScopeName))
+            if (options.AdditionalScopes != null && options.AdditionalScopes.Any())
+            {
+                allowedScopes.AddRange(options.AdditionalScopes);
+            }
+
+            if (allowedScopes.Any())
+            {
+                var scopeOptions = new ScopeValidationOptions
                 {
-                    allowedScopes.Add(options.ScopeName);
-                }
+                    AllowedScopes = allowedScopes,
+                    AuthenticationScheme = options.AuthenticationScheme
+                };
 
-                app.AllowScopes(new ScopeValidationOptions { AllowedScopes = allowedScopes });
+                app.AllowScopes(scopeOptions);
             }
 
             return app;
@@ -119,8 +129,11 @@ namespace Microsoft.AspNet.Builder
                     },
                     OnValidatedToken = e =>
                     {
-                        e.AuthenticationTicket.Principal.Identities.First().AddClaim(
-                            new Claim("token", _tokenRetriever(e.Request)));
+                        if (options.SaveTokenAsClaim)
+                        {
+                            e.AuthenticationTicket.Principal.Identities.First().AddClaim(
+                                new Claim("token", _tokenRetriever(e.Request)));
+                        }
 
                         return Task.FromResult(0);
                     }

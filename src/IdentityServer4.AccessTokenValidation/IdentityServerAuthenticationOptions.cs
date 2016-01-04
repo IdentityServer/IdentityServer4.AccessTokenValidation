@@ -3,6 +3,7 @@ using Microsoft.AspNet.Authentication;
 using Microsoft.AspNet.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 
 namespace IdentityServer4.AccessTokenValidation
@@ -12,6 +13,7 @@ namespace IdentityServer4.AccessTokenValidation
         public IdentityServerAuthenticationOptions()
         {
             AuthenticationScheme = "Bearer";
+            AdditionalScopes = Enumerable.Empty<string>();
         }
 
         public string Authority { get; set; }
