@@ -27,6 +27,7 @@ namespace Microsoft.AspNet.Builder
         {
             var combinedOptions = new CombinedAuthenticationOptions();
             combinedOptions.TokenRetriever = options.TokenRetriever;
+            combinedOptions.AuthenticationScheme = options.AuthenticationScheme;
             
             switch (options.SupportedTokens)
             {

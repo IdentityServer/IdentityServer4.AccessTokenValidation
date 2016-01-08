@@ -28,7 +28,7 @@ namespace IdentityServer4.AccessTokenValidation
         public string NameClaimType { get; set; } = "name";
         public string RoleClaimType { get; set; } = "role";
 
-        public bool SaveTokenAsClaim { get; set; } = true;
+        public bool SaveTokensAsClaim { get; set; } = false;
 
         public HttpMessageHandler JwtBackChannelHandler { get; set; }
         public HttpMessageHandler IntrospectionBackChannelHandler { get; set; }

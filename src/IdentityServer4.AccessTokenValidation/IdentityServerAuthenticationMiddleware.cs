@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Builder;
+﻿using IdentityServer4.AccessTokenValidation.Infrastructure;
+using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Logging;
 using System.Linq;
@@ -14,6 +15,7 @@ namespace IdentityServer4.AccessTokenValidation
 
         private readonly RequestDelegate _introspectionNext;
         private readonly RequestDelegate _jwtNext;
+        private readonly RequestDelegate _nopNext;
 
         public IdentityServerAuthenticationMiddleware(RequestDelegate next, IApplicationBuilder app, CombinedAuthenticationOptions options, ILogger<IdentityServerAuthenticationMiddleware> logger)
         {
@@ -21,6 +23,7 @@ namespace IdentityServer4.AccessTokenValidation
             _options = options;
             _logger = logger;
 
+            // building pipeline for introspection middleware
             if (options.IntrospectionOptions != null)
             {
                 var introspectionBuilder = app.New();
@@ -29,6 +32,7 @@ namespace IdentityServer4.AccessTokenValidation
                 _introspectionNext = introspectionBuilder.Build();
             }
 
+            // building pipeline for JWT bearer middleware
             if (options.JwtBearerOptions != null)
             {
                 var jwtBuilder = app.New();
@@ -36,6 +40,17 @@ namespace IdentityServer4.AccessTokenValidation
                 jwtBuilder.Run(ctx => next(ctx));
                 _jwtNext = jwtBuilder.Build();
             }
+
+            // building pipeline for no token
+            var nopBuilder = app.New();
+            var nopOptions = new NopAuthenticationOptions
+            {
+                AuthenticationScheme = options.AuthenticationScheme
+            };
+
+            nopBuilder.UseMiddleware<NopAuthenticationMiddleware>(nopOptions);
+            nopBuilder.Run(ctx => next(ctx));
+            _nopNext = nopBuilder.Build();
         }
 
         public async Task Invoke(HttpContext context)
@@ -44,7 +59,7 @@ namespace IdentityServer4.AccessTokenValidation
 
             if (token == null)
             {
-                await _next(context);
+                await _nopNext(context);
                 return;
             }
 

@@ -7,6 +7,7 @@ namespace IdentityServer4.AccessTokenValidation
 {
     public class CombinedAuthenticationOptions
     {
+        public string AuthenticationScheme { get; set; }
         public Func<HttpRequest, string> TokenRetriever { get; set; }
 
         public OAuth2IntrospectionOptions IntrospectionOptions { get; set; }
