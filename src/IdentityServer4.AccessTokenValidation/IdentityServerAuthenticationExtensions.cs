@@ -27,6 +27,7 @@ namespace Microsoft.AspNet.Builder
         {
             var combinedOptions = new CombinedAuthenticationOptions();
             combinedOptions.TokenRetriever = options.TokenRetriever;
+            combinedOptions.AuthenticationScheme = options.AuthenticationScheme;
             
             switch (options.SupportedTokens)
             {
@@ -87,7 +88,7 @@ namespace Microsoft.AspNet.Builder
                 RoleClaimType = options.RoleClaimType,
 
                 TokenRetriever = _tokenRetriever,
-                SaveTokenAsClaim = options.SaveTokenAsClaim,
+                SaveTokenAsClaim = options.SaveTokensAsClaims,
 
                 DiscoveryTimeout = options.BackChannelTimeouts,
                 IntrospectionTimeout = options.BackChannelTimeouts
@@ -129,10 +130,10 @@ namespace Microsoft.AspNet.Builder
                     },
                     OnValidatedToken = e =>
                     {
-                        if (options.SaveTokenAsClaim)
+                        if (options.SaveTokensAsClaims)
                         {
                             e.AuthenticationTicket.Principal.Identities.First().AddClaim(
-                                new Claim("token", _tokenRetriever(e.Request)));
+                                new Claim("access_token", _tokenRetriever(e.Request)));
                         }
 
                         return Task.FromResult(0);
