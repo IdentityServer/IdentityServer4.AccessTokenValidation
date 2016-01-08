@@ -8,8 +8,8 @@
   "iconUrl": "https://identityserver.github.io/Documentation/assets/images/icons/IDserver_icon128.jpg",
 
   "dependencies": {
-    "IdentityModel.AspNet.OAuth2Introspection": "1.0.0-beta2",
-    "IdentityModel.AspNet.ScopeValidation": "1.0.0-beta2",
+    "IdentityModel.AspNet.OAuth2Introspection": "1.0.0-beta3",
+    "IdentityModel.AspNet.ScopeValidation": "1.0.0-beta3",
     "Microsoft.AspNet.Authentication.JwtBearer": "1.0.0-rc1-final"
   },
 
