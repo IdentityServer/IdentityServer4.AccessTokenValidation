@@ -88,7 +88,7 @@ namespace Microsoft.AspNet.Builder
                 RoleClaimType = options.RoleClaimType,
 
                 TokenRetriever = _tokenRetriever,
-                SaveTokenAsClaim = options.SaveTokensAsClaims,
+                SaveTokensAsClaims = options.SaveTokensAsClaims,
 
                 DiscoveryTimeout = options.BackChannelTimeouts,
                 IntrospectionTimeout = options.BackChannelTimeouts
