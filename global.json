@@ -1,6 +1,6 @@
-﻿{
-  "projects": [ "src", "test" ],
+{
+  "projects": [ "src", "test", "../IdentityModel.AspNetCore.OAuth2Introspection/src", "../IdentityModel.AspNetCore.ScopeValidation/src" ],
   "sdk": {
-    "version": "1.0.0-rc1-update1"
+    "version": "1.0.0-rc2-20222"
   }
 }
