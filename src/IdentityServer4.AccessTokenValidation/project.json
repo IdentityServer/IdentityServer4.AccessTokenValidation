@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0",
   "description": "ASP.NET 5 Authentication Middleware for IdentityServer Tokens",
   "authors": [ "Dominick Baier", "Brock Allen" ],
@@ -8,13 +8,21 @@
   "iconUrl": "https://identityserver.github.io/Documentation/assets/images/icons/IDserver_icon128.jpg",
 
   "dependencies": {
-    "IdentityModel.AspNet.OAuth2Introspection": "1.0.0-beta3",
-    "IdentityModel.AspNet.ScopeValidation": "1.0.0-beta3",
-    "Microsoft.AspNet.Authentication.JwtBearer": "1.0.0-rc1-final"
+    "IdentityModel.AspNetCore.OAuth2Introspection": "",
+    "IdentityModel.AspNetCore.ScopeValidation": "",
+    "Microsoft.AspNetCore.Authentication": "1.0.0-rc2-*",
+    "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0-*"
   },
 
-  "frameworks": {
-    "dnx451": { },
-    "dnxcore50": { }
+ "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "NETStandard.Library": "1.5.0-*"
+      },
+      "imports": [
+        "dnxcore50",
+        "portable-net45+win8"
+      ]
+    }
   }
 }

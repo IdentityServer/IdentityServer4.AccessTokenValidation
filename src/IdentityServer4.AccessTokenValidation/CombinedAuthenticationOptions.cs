@@ -1,6 +1,6 @@
-﻿using IdentityModel.AspNet.OAuth2Introspection;
-using Microsoft.AspNet.Authentication.JwtBearer;
-using Microsoft.AspNet.Http;
+﻿using IdentityModel.AspNetCore.OAuth2Introspection;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using System;
 
 namespace IdentityServer4.AccessTokenValidation
