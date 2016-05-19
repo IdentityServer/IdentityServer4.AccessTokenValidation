@@ -1,21 +1,19 @@
-﻿using IdentityModel.AspNet.OAuth2Introspection;
-using IdentityModel.AspNet.ScopeValidation;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNet.Authentication.JwtBearer;
-using Microsoft.AspNet.Http;
+﻿using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Microsoft.AspNet.Builder
+namespace Microsoft.AspNetCore.Builder
 {
     public static class IdentityServerAuthenticationExtensions
     {
         static Func<HttpRequest, string> _tokenRetriever = request => request.HttpContext.Items["idsrv4:tokenvalidation:token"] as string;
 
-        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, Action<IdentityServerAuthenticationOptions> configureOptions)
+        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, Action<IdentityServer4.AccessTokenValidation.IdentityServerAuthenticationOptions> configureOptions)
         {
             var options = new IdentityServerAuthenticationOptions();
             configureOptions(options);
@@ -23,9 +21,9 @@ namespace Microsoft.AspNet.Builder
             return app.UseIdentityServerAuthentication(options);
         }
 
-        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, IdentityServerAuthenticationOptions options)
+        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, IdentityServer4.AccessTokenValidation.IdentityServerAuthenticationOptions options)
         {
-            var combinedOptions = new CombinedAuthenticationOptions();
+            var combinedOptions = new IdentityServer4.AccessTokenValidation.CombinedAuthenticationOptions();
             combinedOptions.TokenRetriever = options.TokenRetriever;
             combinedOptions.AuthenticationScheme = options.AuthenticationScheme;
             
@@ -122,17 +120,22 @@ namespace Microsoft.AspNet.Builder
 
                 Events = new JwtBearerEvents
                 {
-                    OnReceivingToken = e =>
-                    {
-                        e.Token = _tokenRetriever(e.Request);
+                    //EH! There is no OnReceivingToken anymore
+                    //OnReceivingToken = e =>
+                    //{
+                    //    e.Token = _tokenRetriever(e.Request);
 
+                    //    return Task.FromResult(0);
+                    //},
+                    OnMessageReceived = e => {
+                        e.Token = _tokenRetriever(e.Request);
                         return Task.FromResult(0);
                     },
-                    OnValidatedToken = e =>
+                    OnTokenValidated = e =>
                     {
                         if (options.SaveTokensAsClaims)
                         {
-                            e.AuthenticationTicket.Principal.Identities.First().AddClaim(
+                            e.Ticket.Principal.Identities.First().AddClaim(
                                 new Claim("access_token", _tokenRetriever(e.Request)));
                         }
 
