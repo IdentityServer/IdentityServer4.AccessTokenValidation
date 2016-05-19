@@ -1,6 +1,6 @@
 ﻿using IdentityModel.AspNet.OAuth2Introspection;
-using Microsoft.AspNet.Authentication;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
