@@ -1,5 +1,7 @@
-﻿namespace IdentityServer4.AccessTokenValidation.Infrastructure
+﻿using Microsoft.AspNetCore.Builder;
+
+namespace IdentityServer4.AccessTokenValidation.Infrastructure
 {
-    internal class NopAuthenticationOptions : Microsoft.AspNetCore.Builder.AuthenticationOptions
+    internal class NopAuthenticationOptions : AuthenticationOptions
     { }
 }

@@ -13,7 +13,7 @@ namespace Microsoft.AspNetCore.Builder
     {
         static Func<HttpRequest, string> _tokenRetriever = request => request.HttpContext.Items["idsrv4:tokenvalidation:token"] as string;
 
-        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, Action<IdentityServer4.AccessTokenValidation.IdentityServerAuthenticationOptions> configureOptions)
+        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, Action<IdentityServerAuthenticationOptions> configureOptions)
         {
             var options = new IdentityServerAuthenticationOptions();
             configureOptions(options);
@@ -21,9 +21,9 @@ namespace Microsoft.AspNetCore.Builder
             return app.UseIdentityServerAuthentication(options);
         }
 
-        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, IdentityServer4.AccessTokenValidation.IdentityServerAuthenticationOptions options)
+        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, IdentityServerAuthenticationOptions options)
         {
-            var combinedOptions = new IdentityServer4.AccessTokenValidation.CombinedAuthenticationOptions();
+            var combinedOptions = new CombinedAuthenticationOptions();
             combinedOptions.TokenRetriever = options.TokenRetriever;
             combinedOptions.AuthenticationScheme = options.AuthenticationScheme;
             
