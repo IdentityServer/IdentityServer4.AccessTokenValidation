@@ -1,15 +1,13 @@
-﻿using IdentityModel.AspNet.OAuth2Introspection;
-using IdentityModel.AspNet.ScopeValidation;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNet.Authentication.JwtBearer;
-using Microsoft.AspNet.Http;
+﻿using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace Microsoft.AspNet.Builder
+namespace Microsoft.AspNetCore.Builder
 {
     public static class IdentityServerAuthenticationExtensions
     {
@@ -122,17 +120,22 @@ namespace Microsoft.AspNet.Builder
 
                 Events = new JwtBearerEvents
                 {
-                    OnReceivingToken = e =>
-                    {
-                        e.Token = _tokenRetriever(e.Request);
+                    //EH! There is no OnReceivingToken anymore
+                    //OnReceivingToken = e =>
+                    //{
+                    //    e.Token = _tokenRetriever(e.Request);
 
+                    //    return Task.FromResult(0);
+                    //},
+                    OnMessageReceived = e => {
+                        e.Token = _tokenRetriever(e.Request);
                         return Task.FromResult(0);
                     },
-                    OnValidatedToken = e =>
+                    OnTokenValidated = e =>
                     {
                         if (options.SaveTokensAsClaims)
                         {
-                            e.AuthenticationTicket.Principal.Identities.First().AddClaim(
+                            e.Ticket.Principal.Identities.First().AddClaim(
                                 new Claim("access_token", _tokenRetriever(e.Request)));
                         }
 

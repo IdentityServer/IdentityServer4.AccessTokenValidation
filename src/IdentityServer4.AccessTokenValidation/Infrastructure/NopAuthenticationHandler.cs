@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using System.Threading.Tasks;
 
 namespace IdentityServer4.AccessTokenValidation.Infrastructure
@@ -7,7 +7,7 @@ namespace IdentityServer4.AccessTokenValidation.Infrastructure
     {
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            return Task.FromResult(AuthenticateResult.Failed("No token found."));
+            return Task.FromResult(AuthenticateResult.Fail("No token found."));
         }
     }
 }

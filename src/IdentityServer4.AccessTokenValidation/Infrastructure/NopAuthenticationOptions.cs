@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNet.Authentication;
+﻿using Microsoft.AspNetCore.Builder;
 
 namespace IdentityServer4.AccessTokenValidation.Infrastructure
 {
