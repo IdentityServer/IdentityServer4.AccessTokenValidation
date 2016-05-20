@@ -22,8 +22,10 @@ bld/
 [Bb]in/
 [Oo]bj/
 
-# Visual Studo 2015 cache/options directory
+# Visual Studio 2015 cache/options directory
 .vs/
+project.lock.json
+nuget.exe
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -135,7 +137,13 @@ publish/
 *.publishproj
 
 # NuGet Packages
-packages/
+*.nupkg
+# The packages folder can be ignored because of Package Restore
+**/packages/*
+# except build/, which is used as an MSBuild target.
+!**/packages/build/
+# Uncomment if necessary however generally it will be regenerated when needed
+#!**/packages/repositories.config
 
 # Windows Azure Build Output
 csx/
@@ -188,7 +196,3 @@ FakesAssemblies/
 
 # Visual Studio 6 workspace options file
 *.opt
-
-# ASP.NET 5
-project.lock.json
-nuget.exe

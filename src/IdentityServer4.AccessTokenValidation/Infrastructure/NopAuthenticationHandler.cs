@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNet.Authentication;
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Builder;
 using System.Threading.Tasks;
 
 namespace IdentityServer4.AccessTokenValidation.Infrastructure
@@ -7,7 +12,7 @@ namespace IdentityServer4.AccessTokenValidation.Infrastructure
     {
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            return Task.FromResult(AuthenticateResult.Failed("No token found."));
+            return Task.FromResult(AuthenticateResult.Fail("No token found."));
         }
     }
 }

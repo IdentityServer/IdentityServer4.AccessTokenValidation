@@ -1,12 +1,14 @@
-﻿using IdentityModel.AspNet.OAuth2Introspection;
-using IdentityModel.AspNet.ScopeValidation;
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
 using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNet.Authentication.JwtBearer;
-using Microsoft.AspNet.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Microsoft.AspNet.Builder
@@ -122,22 +124,12 @@ namespace Microsoft.AspNet.Builder
 
                 Events = new JwtBearerEvents
                 {
-                    OnReceivingToken = e =>
+                    OnMessageReceived = e =>
                     {
                         e.Token = _tokenRetriever(e.Request);
 
                         return Task.FromResult(0);
                     },
-                    OnValidatedToken = e =>
-                    {
-                        if (options.SaveTokensAsClaims)
-                        {
-                            e.AuthenticationTicket.Principal.Identities.First().AddClaim(
-                                new Claim("access_token", _tokenRetriever(e.Request)));
-                        }
-
-                        return Task.FromResult(0);
-                    }
                 }
             };
 

@@ -1,6 +1,10 @@
-﻿using IdentityServer4.AccessTokenValidation.Infrastructure;
-using Microsoft.AspNet.Builder;
-using Microsoft.AspNet.Http;
+﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
+
+
+using IdentityServer4.AccessTokenValidation.Infrastructure;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
