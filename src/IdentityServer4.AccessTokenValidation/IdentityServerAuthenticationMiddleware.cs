@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -48,7 +49,7 @@ namespace IdentityServer4.AccessTokenValidation
                 AuthenticationScheme = options.AuthenticationScheme
             };
 
-            nopBuilder.UseMiddleware<NopAuthenticationMiddleware>(nopOptions);
+            nopBuilder.UseMiddleware<NopAuthenticationMiddleware>(Options.Create(nopOptions));
             nopBuilder.Run(ctx => next(ctx));
             _nopNext = nopBuilder.Build();
         }
