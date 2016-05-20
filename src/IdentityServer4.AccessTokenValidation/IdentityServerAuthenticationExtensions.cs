@@ -4,14 +4,13 @@
 
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Microsoft.AspNet.Builder
+namespace Microsoft.AspNetCore.Builder
 {
     public static class IdentityServerAuthenticationExtensions
     {
@@ -114,7 +113,7 @@ namespace Microsoft.AspNet.Builder
             {
                 AuthenticationScheme = options.AuthenticationScheme,
                 Authority = options.Authority,
-                RequireHttpsMetadata = false,
+                RequireHttpsMetadata = options.RequireHttpsMetadata,
 
                 AutomaticAuthenticate = options.AutomaticAuthenticate,
                 AutomaticChallenge = options.AutomaticChallenge,

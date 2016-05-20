@@ -21,6 +21,7 @@ namespace Microsoft.AspNetCore.Builder
         }
 
         public string Authority { get; set; }
+        public bool RequireHttpsMetadata { get; set; } = true;
 
         public SupportedTokens SupportedTokens { get; set; } = SupportedTokens.Both;
         public Func<HttpRequest, string> TokenRetriever { get; set; } = TokenRetrieval.FromAuthorizationHeader();
