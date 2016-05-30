@@ -17,7 +17,6 @@ namespace Microsoft.AspNetCore.Builder
         public IdentityServerAuthenticationOptions()
         {
             AuthenticationScheme = "Bearer";
-            AdditionalScopes = Enumerable.Empty<string>();
         }
 
         public string Authority { get; set; }
@@ -28,12 +27,12 @@ namespace Microsoft.AspNetCore.Builder
 
         public string ScopeName { get; set; }
         public string ScopeSecret { get; set; }
-        public IEnumerable<string> AdditionalScopes { get; set; }
+        public IEnumerable<string> AdditionalScopes { get; set; } = Enumerable.Empty<string>();
 
         public string NameClaimType { get; set; } = "name";
         public string RoleClaimType { get; set; } = "role";
 
-        public bool SaveTokensAsClaims { get; set; } = false;
+        public bool SaveTokens { get; set; } = false;
 
         public HttpMessageHandler JwtBackChannelHandler { get; set; }
         public HttpMessageHandler IntrospectionBackChannelHandler { get; set; }
