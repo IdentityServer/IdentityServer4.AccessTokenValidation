@@ -40,26 +40,29 @@ namespace Microsoft.AspNetCore.Builder
 
             app.UseMiddleware<IdentityServerAuthenticationMiddleware>(app, combinedOptions);
 
-            var allowedScopes = new List<string>();
-            if (!string.IsNullOrWhiteSpace(options.ScopeName))
+            if (options.ValidateScope)
             {
-                allowedScopes.Add(options.ScopeName);
-            }
-
-            if (options.AdditionalScopes != null && options.AdditionalScopes.Any())
-            {
-                allowedScopes.AddRange(options.AdditionalScopes);
-            }
-
-            if (allowedScopes.Any())
-            {
-                var scopeOptions = new ScopeValidationOptions
+                var allowedScopes = new List<string>();
+                if (!string.IsNullOrWhiteSpace(options.ScopeName))
                 {
-                    AllowedScopes = allowedScopes,
-                    AuthenticationScheme = options.AuthenticationScheme
-                };
+                    allowedScopes.Add(options.ScopeName);
+                }
 
-                app.AllowScopes(scopeOptions);
+                if (options.AdditionalScopes != null && options.AdditionalScopes.Any())
+                {
+                    allowedScopes.AddRange(options.AdditionalScopes);
+                }
+
+                if (allowedScopes.Any())
+                {
+                    var scopeOptions = new ScopeValidationOptions
+                    {
+                        AllowedScopes = allowedScopes,
+                        AuthenticationScheme = options.AuthenticationScheme
+                    };
+
+                    app.AllowScopes(scopeOptions);
+                }
             }
 
             return app;
@@ -81,7 +84,10 @@ namespace Microsoft.AspNetCore.Builder
                 RoleClaimType = options.RoleClaimType,
 
                 TokenRetriever = _tokenRetriever,
-                SaveTokensAsClaims = options.SaveTokens,
+                SaveToken = options.SaveToken,
+
+                EnableCaching = options.EnableCaching,
+                CacheDuration = options.CacheDuration,
 
                 DiscoveryTimeout = options.BackChannelTimeouts,
                 IntrospectionTimeout = options.BackChannelTimeouts
@@ -112,6 +118,8 @@ namespace Microsoft.AspNetCore.Builder
 
                 BackchannelTimeout = options.BackChannelTimeouts,
                 RefreshOnIssuerKeyNotFound = true,
+
+                SaveToken = options.SaveToken,
 
                 Events = new JwtBearerEvents
                 {
