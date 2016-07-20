@@ -5,5 +5,11 @@
 namespace Microsoft.AspNetCore.Builder
 {
     internal class NopAuthenticationOptions : AuthenticationOptions
-    { }
+    {
+        public NopAuthenticationOptions()
+        {
+            AutomaticAuthenticate = true;
+            AutomaticChallenge = true;
+        }
+    }
 }
