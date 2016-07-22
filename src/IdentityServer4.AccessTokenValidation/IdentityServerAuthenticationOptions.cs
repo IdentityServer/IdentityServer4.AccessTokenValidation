@@ -70,6 +70,11 @@ namespace Microsoft.AspNetCore.Builder
         public string RoleClaimType { get; set; } = "role";
 
         /// <summary>
+        /// Specifies inbound claim type map for JWT tokens (mainly used to disable the annoying default behavior of the MS JWT handler)
+        /// </summary>
+        public Dictionary<string, string> InboundJwtClaimTypeMap { get; set; } = new Dictionary<string, string>();
+
+        /// <summary>
         /// Specifies whether caching is enabled for introspection responses (requires a distributed cache implementation)
         /// </summary>
         public bool EnableCaching { get; set; } = false;

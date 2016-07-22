@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -140,6 +141,15 @@ namespace Microsoft.AspNetCore.Builder
             jwtOptions.TokenValidationParameters.ValidateAudience = false;
             jwtOptions.TokenValidationParameters.NameClaimType = options.NameClaimType;
             jwtOptions.TokenValidationParameters.RoleClaimType = options.RoleClaimType;
+
+            if (options.InboundJwtClaimTypeMap != null)
+            {
+                var handler = new JwtSecurityTokenHandler();
+                handler.InboundClaimTypeMap = options.InboundJwtClaimTypeMap;
+
+                jwtOptions.SecurityTokenValidators.Clear();
+                jwtOptions.SecurityTokenValidators.Add(handler);
+            }
             
             return jwtOptions;
         }
