@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1-beta2",
+  "version": "1.0.1-beta3",
   "authors": [ "Brock Allen", "Dominick Baier" ],
   "description": "ASP.NET Core middleware to validate JWT and reference tokens from IdentityServer4",
 
@@ -12,8 +12,8 @@
 
   "dependencies": {
     "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0",
-    "IdentityModel.AspNetCore.OAuth2Introspection": "1.0.1-*",
-    "IdentityModel.AspNetCore.ScopeValidation": "1.0.0-*"
+    "IdentityModel.AspNetCore.OAuth2Introspection": "1.0.1-beta2",
+    "IdentityModel.AspNetCore.ScopeValidation": "1.0.0-beta3"
   },
 
   "frameworks": {
