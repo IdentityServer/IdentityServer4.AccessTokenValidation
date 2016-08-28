@@ -17,6 +17,8 @@ namespace Microsoft.AspNetCore.Builder
         public IdentityServerAuthenticationOptions()
         {
             AuthenticationScheme = "Bearer";
+            AutomaticAuthenticate = true;
+            AutomaticChallenge = true;
         }
 
         /// <summary>
