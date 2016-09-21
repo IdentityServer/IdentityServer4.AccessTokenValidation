@@ -4,6 +4,7 @@
 
 using IdentityModel.AspNetCore.OAuth2Introspection;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -110,5 +111,11 @@ namespace Microsoft.AspNetCore.Builder
         /// timeout for back-channel operations
         /// </summary>
         public TimeSpan BackChannelTimeouts { get; set; } = TimeSpan.FromSeconds(60);
+        /// <summary>
+        /// The object provided by the application to process events raised by the bearer authentication middleware.
+        /// The application may implement the interface fully, or it may create an instance of JwtBearerAuthenticationEvents
+        /// and assign delegates only to the events it wants to process.
+        /// </summary>
+        public IJwtBearerEvents JwtBearerEvents { get; set; } = new JwtBearerEvents();
     }
 }
