@@ -112,9 +112,7 @@ namespace Microsoft.AspNetCore.Builder
         /// </summary>
         public TimeSpan BackChannelTimeouts { get; set; } = TimeSpan.FromSeconds(60);
         /// <summary>
-        /// The object provided by the application to process events raised by the bearer authentication middleware.
-        /// The application may implement the interface fully, or it may create an instance of JwtBearerAuthenticationEvents
-        /// and assign delegates only to the events it wants to process.
+        /// events for JWT middleware
         /// </summary>
         public IJwtBearerEvents JwtBearerEvents { get; set; } = new JwtBearerEvents();
     }
