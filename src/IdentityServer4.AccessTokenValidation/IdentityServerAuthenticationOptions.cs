@@ -4,6 +4,7 @@
 
 using IdentityModel.AspNetCore.OAuth2Introspection;
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -110,5 +111,9 @@ namespace Microsoft.AspNetCore.Builder
         /// timeout for back-channel operations
         /// </summary>
         public TimeSpan BackChannelTimeouts { get; set; } = TimeSpan.FromSeconds(60);
+        /// <summary>
+        /// events for JWT middleware
+        /// </summary>
+        public IJwtBearerEvents JwtBearerEvents { get; set; } = new JwtBearerEvents();
     }
 }

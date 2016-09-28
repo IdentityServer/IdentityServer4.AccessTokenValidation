@@ -127,9 +127,11 @@ namespace Microsoft.AspNetCore.Builder
                     OnMessageReceived = e =>
                     {
                         e.Token = _tokenRetriever(e.Request);
-
-                        return Task.FromResult(0);
+                        return options.JwtBearerEvents.MessageReceived(e);
                     },
+                    OnTokenValidated = e => options.JwtBearerEvents.TokenValidated(e),
+                    OnAuthenticationFailed = e => options.JwtBearerEvents.AuthenticationFailed(e),
+                    OnChallenge = e => options.JwtBearerEvents.Challenge(e)
                 }
             };
 
