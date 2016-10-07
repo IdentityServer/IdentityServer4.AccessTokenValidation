@@ -111,6 +111,7 @@ namespace Microsoft.AspNetCore.Builder
         /// timeout for back-channel operations
         /// </summary>
         public TimeSpan BackChannelTimeouts { get; set; } = TimeSpan.FromSeconds(60);
+        
         /// <summary>
         /// events for JWT middleware
         /// </summary>
