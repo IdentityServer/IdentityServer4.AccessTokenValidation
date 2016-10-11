@@ -3,7 +3,6 @@
 
 
 using IdentityServer4.AccessTokenValidation;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace Microsoft.AspNetCore.Builder
@@ -15,39 +14,16 @@ namespace Microsoft.AspNetCore.Builder
             var combinedOptions = CombinedAuthenticationOptions.FromIdentityServerAuthenticationOptions(options);
             app.UseIdentityServerAuthentication(combinedOptions);
 
-            return app.UseScopeValidation(options);
+            return app;
         }
 
         public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, CombinedAuthenticationOptions options)
         {
-            return app.UseMiddleware<IdentityServerAuthenticationMiddleware>(options);    
-        }
+            app.UseMiddleware<IdentityServerAuthenticationMiddleware>(options);    
 
-        public static IApplicationBuilder UseScopeValidation(this IApplicationBuilder app, IdentityServerAuthenticationOptions options)
-        {
-            if (options.ValidateScope)
+            if (options.ScopeValidationOptions.AllowedScopes.Any())
             {
-                var allowedScopes = new List<string>();
-                if (!string.IsNullOrWhiteSpace(options.ScopeName))
-                {
-                    allowedScopes.Add(options.ScopeName);
-                }
-
-                if (options.AdditionalScopes != null && options.AdditionalScopes.Any())
-                {
-                    allowedScopes.AddRange(options.AdditionalScopes);
-                }
-
-                if (allowedScopes.Any())
-                {
-                    var scopeOptions = new ScopeValidationOptions
-                    {
-                        AllowedScopes = allowedScopes,
-                        AuthenticationScheme = options.AuthenticationScheme
-                    };
-
-                    app.AllowScopes(scopeOptions);
-                }
+                app.AllowScopes(options.ScopeValidationOptions);
             }
 
             return app;

@@ -6,7 +6,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 
 namespace IdentityServer4.AccessTokenValidation
 {
@@ -19,6 +21,7 @@ namespace IdentityServer4.AccessTokenValidation
 
         public OAuth2IntrospectionOptions IntrospectionOptions { get; set; }
         public JwtBearerOptions JwtBearerOptions { get; set; }
+        public ScopeValidationOptions ScopeValidationOptions { get; set; }
 
         public static CombinedAuthenticationOptions FromIdentityServerAuthenticationOptions(IdentityServerAuthenticationOptions options)
         {
@@ -40,6 +43,40 @@ namespace IdentityServer4.AccessTokenValidation
                     break;
                 default:
                     throw new Exception("SupportedTokens has invalid value");
+            }
+
+            if (options.ValidateScope)
+            {
+                var allowedScopes = new List<string>();
+                if (!string.IsNullOrWhiteSpace(options.ScopeName))
+                {
+                    allowedScopes.Add(options.ScopeName);
+                }
+
+                if (options.AdditionalScopes != null && options.AdditionalScopes.Any())
+                {
+                    allowedScopes.AddRange(options.AdditionalScopes);
+                }
+
+                if (allowedScopes.Any())
+                {
+                    var scopeOptions = new ScopeValidationOptions
+                    {
+                        AllowedScopes = allowedScopes,
+                        AuthenticationScheme = options.AuthenticationScheme
+                    };
+
+                    combinedOptions.ScopeValidationOptions = scopeOptions;
+                }
+                else
+                {
+                    var scopeOptions = new ScopeValidationOptions
+                    {
+                        AllowedScopes = new string[] { }
+                    };
+
+                    combinedOptions.ScopeValidationOptions = scopeOptions;
+                }
             }
 
             return combinedOptions;
