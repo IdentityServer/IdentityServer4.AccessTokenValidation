@@ -19,7 +19,7 @@ namespace Microsoft.AspNetCore.Builder
 
         public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, CombinedAuthenticationOptions options)
         {
-            app.UseMiddleware<IdentityServerAuthenticationMiddleware>(options);    
+            app.UseMiddleware<IdentityServerAuthenticationMiddleware>(app, options);    
 
             if (options.ScopeValidationOptions.AllowedScopes.Any())
             {
