@@ -43,19 +43,19 @@ namespace Microsoft.AspNetCore.Builder
         public Func<HttpRequest, string> TokenRetriever { get; set; } = TokenRetrieval.FromAuthorizationHeader();
 
         /// <summary>
-        /// Name of the scope used for scope validation and for authentication against introspection endpoint
+        /// Name of the API resource used for authentication against introspection endpoint
         /// </summary>
-        public string ScopeName { get; set; }
+        public string ApiName { get; set; }
 
         /// <summary>
         /// Secret used for authentication against introspection endpoint
         /// </summary>
-        public string ScopeSecret { get; set; }
+        public string ApiSecret { get; set; }
 
         /// <summary>
-        /// Additional scope names used for validation
+        /// Allowed scope names used for validation
         /// </summary>
-        public IEnumerable<string> AdditionalScopes { get; set; } = Enumerable.Empty<string>();
+        public ICollection<string> AllowedScopes { get; set; } = new HashSet<string>();
 
         /// <summary>
         /// Specifies whether the scopes should be validated or not

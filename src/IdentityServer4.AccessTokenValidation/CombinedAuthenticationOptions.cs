@@ -48,14 +48,10 @@ namespace IdentityServer4.AccessTokenValidation
             if (options.ValidateScope)
             {
                 var allowedScopes = new List<string>();
-                if (!string.IsNullOrWhiteSpace(options.ScopeName))
-                {
-                    allowedScopes.Add(options.ScopeName);
-                }
 
-                if (options.AdditionalScopes != null && options.AdditionalScopes.Any())
+                if (options.AllowedScopes != null && options.AllowedScopes.Any())
                 {
-                    allowedScopes.AddRange(options.AdditionalScopes);
+                    allowedScopes.AddRange(options.AllowedScopes);
                 }
 
                 if (allowedScopes.Any())
@@ -88,8 +84,8 @@ namespace IdentityServer4.AccessTokenValidation
             {
                 AuthenticationScheme = options.AuthenticationScheme,
                 Authority = options.Authority,
-                ScopeName = options.ScopeName,
-                ScopeSecret = options.ScopeSecret,
+                ScopeName = options.ApiName,
+                ScopeSecret = options.ApiSecret,
 
                 AutomaticAuthenticate = options.AutomaticAuthenticate,
                 AutomaticChallenge = options.AutomaticChallenge,
