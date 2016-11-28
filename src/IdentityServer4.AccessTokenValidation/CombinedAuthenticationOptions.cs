@@ -80,6 +80,11 @@ namespace IdentityServer4.AccessTokenValidation
 
         private static OAuth2IntrospectionOptions ConfigureIntrospection(IdentityServerAuthenticationOptions options)
         {
+            if (options.ApiName == null && options.ApiSecret == null)
+            {
+                return null;
+            }
+
             var introspectionOptions = new OAuth2IntrospectionOptions
             {
                 AuthenticationScheme = options.AuthenticationScheme,
