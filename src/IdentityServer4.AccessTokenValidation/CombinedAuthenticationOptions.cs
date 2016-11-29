@@ -22,12 +22,19 @@ namespace IdentityServer4.AccessTokenValidation
         public OAuth2IntrospectionOptions IntrospectionOptions { get; set; }
         public JwtBearerOptions JwtBearerOptions { get; set; }
         public ScopeValidationOptions ScopeValidationOptions { get; set; }
+        public NopAuthenticationOptions PassThruOptions { get; set; }
 
         public static CombinedAuthenticationOptions FromIdentityServerAuthenticationOptions(IdentityServerAuthenticationOptions options)
         {
             var combinedOptions = new CombinedAuthenticationOptions();
             combinedOptions.TokenRetriever = options.TokenRetriever;
             combinedOptions.AuthenticationScheme = options.AuthenticationScheme;
+            combinedOptions.PassThruOptions = new NopAuthenticationOptions()
+            {
+                AuthenticationScheme = options.AuthenticationScheme,
+                AutomaticAuthenticate = options.AutomaticAuthenticate,
+                AutomaticChallenge = options.AutomaticChallenge
+            };
 
             switch (options.SupportedTokens)
             {

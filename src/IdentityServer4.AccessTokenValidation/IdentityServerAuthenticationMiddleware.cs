@@ -48,12 +48,8 @@ namespace IdentityServer4.AccessTokenValidation
 
             // building pipeline for no token
             var nopBuilder = app.New();
-            var nopOptions = new NopAuthenticationOptions
-            {
-                AuthenticationScheme = options.AuthenticationScheme
-            };
 
-            nopBuilder.UseMiddleware<NopAuthenticationMiddleware>(Options.Create(nopOptions));
+            nopBuilder.UseMiddleware<NopAuthenticationMiddleware>(Options.Create(options.PassThruOptions));
             nopBuilder.Run(ctx => next(ctx));
             _nopNext = nopBuilder.Build();
         }
