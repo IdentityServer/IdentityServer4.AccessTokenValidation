@@ -58,45 +58,42 @@ namespace IdentityServer4.AccessTokenValidation
         {
             var token = _options.TokenRetriever(context.Request);
 
-            if (token == null)
+            if (token != null)
             {
-                await _nopNext(context);
-                return;
+                context.Items.Add("idsrv4:tokenvalidation:token", token);
+
+                // seems to be a JWT
+                if (token.Contains('.'))
+                {
+                    // see if local validation is setup
+                    if (_jwtNext != null)
+                    {
+                        await _jwtNext(context);
+                        return;
+                    }
+                    // otherwise use introspection endpoint
+                    if (_introspectionNext != null)
+                    {
+                        await _introspectionNext(context);
+                        return;
+                    }
+
+                    _logger.LogWarning("No validator configured for JWT token");
+                }
+                else
+                {
+                    // use introspection endpoint
+                    if (_introspectionNext != null)
+                    {
+                        await _introspectionNext(context);
+                        return;
+                    }
+
+                    _logger.LogWarning("No validator configured for reference token. Ensure ApiName and ApiSecret have been configured to use introspection.");
+                }
             }
 
-            context.Items.Add("idsrv4:tokenvalidation:token", token);
-
-            // seems to be a JWT
-            if (token.Contains('.'))
-            {
-                // see if local validation is setup
-                if (_jwtNext != null)
-                {
-                    await _jwtNext(context);
-                    return;
-                }
-                // otherwise use introspection endpoint
-                if (_introspectionNext != null)
-                {
-                    await _introspectionNext(context);
-                    return;
-                }
-
-                _logger.LogWarning("No validator configured for JWT token");
-            }
-            else
-            {
-                // use introspection endpoint
-                if (_introspectionNext != null)
-                {
-                    await _introspectionNext(context);
-                    return;
-                }
-
-                _logger.LogWarning("No validator configured for reference token. Ensure ApiName and ApiSecret have been configured to use introspection.");
-            }
-
-            await _next(context);
+            await _nopNext(context);
         }
     }
 }
