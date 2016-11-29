@@ -15,7 +15,6 @@ namespace IdentityServer4.AccessTokenValidation
     public class IdentityServerAuthenticationMiddleware
     {
         private readonly ILogger<IdentityServerAuthenticationMiddleware> _logger;
-        private readonly RequestDelegate _next;
         private readonly CombinedAuthenticationOptions _options;
 
         private readonly RequestDelegate _introspectionNext;
@@ -24,7 +23,6 @@ namespace IdentityServer4.AccessTokenValidation
 
         public IdentityServerAuthenticationMiddleware(RequestDelegate next, IApplicationBuilder app, CombinedAuthenticationOptions options, ILogger<IdentityServerAuthenticationMiddleware> logger)
         {
-            _next = next;
             _options = options;
             _logger = logger;
 
