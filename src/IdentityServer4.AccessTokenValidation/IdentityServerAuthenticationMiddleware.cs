@@ -93,7 +93,7 @@ namespace IdentityServer4.AccessTokenValidation
                     return;
                 }
 
-                _logger.LogWarning("No validator configured for reference token");
+                _logger.LogWarning("No validator configured for reference token. Ensure ApiName and ApiSecret have been configured to use introspection.");
             }
 
             await _next(context);

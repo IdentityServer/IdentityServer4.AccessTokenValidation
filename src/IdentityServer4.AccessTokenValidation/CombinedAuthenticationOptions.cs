@@ -87,7 +87,8 @@ namespace IdentityServer4.AccessTokenValidation
 
         private static OAuth2IntrospectionOptions ConfigureIntrospection(IdentityServerAuthenticationOptions options)
         {
-            if (options.ApiName == null && options.ApiSecret == null)
+            if (String.IsNullOrWhiteSpace(options.ApiName) && 
+                String.IsNullOrWhiteSpace(options.ApiSecret))
             {
                 return null;
             }
