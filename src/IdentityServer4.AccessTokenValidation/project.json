@@ -7,7 +7,7 @@
     "tags": [ "OAuth2", "OAuth 2.0", "OpenID Connect", "Security", "Identity", "IdentityServer", "Bearer tokens" ],
     "projectUrl": "https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation",
     "licenseUrl": "https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation/LICENSE",
-    "iconUrl": "https://identityserver.github.io/Documentation/assets/images/icons/IDmodel_icon128.png"
+    "iconUrl": "https://raw.githubusercontent.com/IdentityServer/Artwork/master/Logos/IDserver_icon128.jpg"
   },
 
   "dependencies": {
