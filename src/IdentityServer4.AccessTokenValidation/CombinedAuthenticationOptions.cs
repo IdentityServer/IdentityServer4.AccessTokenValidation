@@ -93,6 +93,16 @@ namespace IdentityServer4.AccessTokenValidation
                 return null;
             }
 
+            if (String.IsNullOrWhiteSpace(options.ApiName))
+            {
+                throw new ArgumentException("ApiName must be configured if ApiSecret is set.");
+            }
+
+            if (String.IsNullOrWhiteSpace(options.ApiSecret))
+            {
+                throw new ArgumentException("ApiSecret must be configured if ApiName is set.");
+            }
+
             var introspectionOptions = new OAuth2IntrospectionOptions
             {
                 AuthenticationScheme = options.AuthenticationScheme,
