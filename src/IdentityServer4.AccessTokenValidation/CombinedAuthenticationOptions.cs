@@ -26,16 +26,19 @@ namespace IdentityServer4.AccessTokenValidation
 
         public static CombinedAuthenticationOptions FromIdentityServerAuthenticationOptions(IdentityServerAuthenticationOptions options)
         {
-            var combinedOptions = new CombinedAuthenticationOptions();
-            combinedOptions.TokenRetriever = options.TokenRetriever;
-            combinedOptions.AuthenticationScheme = options.AuthenticationScheme;
-            combinedOptions.PassThruOptions = new NopAuthenticationOptions()
+            var combinedOptions = new CombinedAuthenticationOptions()
             {
+                TokenRetriever = options.TokenRetriever,
                 AuthenticationScheme = options.AuthenticationScheme,
-                AutomaticAuthenticate = options.AutomaticAuthenticate,
-                AutomaticChallenge = options.AutomaticChallenge
-            };
 
+                PassThruOptions = new NopAuthenticationOptions()
+                {
+                    AuthenticationScheme = options.AuthenticationScheme,
+                    AutomaticAuthenticate = options.AutomaticAuthenticate,
+                    AutomaticChallenge = options.AutomaticChallenge
+                }
+            };
+            
             switch (options.SupportedTokens)
             {
                 case SupportedTokens.Jwt:
@@ -87,8 +90,7 @@ namespace IdentityServer4.AccessTokenValidation
 
         private static OAuth2IntrospectionOptions ConfigureIntrospection(IdentityServerAuthenticationOptions options)
         {
-            if (String.IsNullOrWhiteSpace(options.ApiName) && 
-                String.IsNullOrWhiteSpace(options.ApiSecret))
+            if (String.IsNullOrWhiteSpace(options.ApiSecret))
             {
                 return null;
             }
@@ -96,11 +98,6 @@ namespace IdentityServer4.AccessTokenValidation
             if (String.IsNullOrWhiteSpace(options.ApiName))
             {
                 throw new ArgumentException("ApiName must be configured if ApiSecret is set.");
-            }
-
-            if (String.IsNullOrWhiteSpace(options.ApiSecret))
-            {
-                throw new ArgumentException("ApiSecret must be configured if ApiName is set.");
             }
 
             var introspectionOptions = new OAuth2IntrospectionOptions
@@ -161,6 +158,7 @@ namespace IdentityServer4.AccessTokenValidation
                         e.Token = _tokenRetriever(e.Request);
                         return options.JwtBearerEvents.MessageReceived(e);
                     },
+
                     OnTokenValidated = e => options.JwtBearerEvents.TokenValidated(e),
                     OnAuthenticationFailed = e => options.JwtBearerEvents.AuthenticationFailed(e),
                     OnChallenge = e => options.JwtBearerEvents.Challenge(e)
@@ -172,10 +170,20 @@ namespace IdentityServer4.AccessTokenValidation
                 jwtOptions.BackchannelHttpHandler = options.JwtBackChannelHandler;
             }
 
-            jwtOptions.TokenValidationParameters.ValidateAudience = false;
+            // if API name is set, do an audience check
+            if (!string.IsNullOrWhiteSpace(options.ApiName))
+            {
+                jwtOptions.Audience = options.ApiName;
+            }
+            else
+            {
+                // otherwise don't check the aud
+                jwtOptions.TokenValidationParameters.ValidateAudience = false;
+            }
+
             jwtOptions.TokenValidationParameters.NameClaimType = options.NameClaimType;
             jwtOptions.TokenValidationParameters.RoleClaimType = options.RoleClaimType;
-
+            
             if (options.InboundJwtClaimTypeMap != null)
             {
                 var handler = new JwtSecurityTokenHandler();
