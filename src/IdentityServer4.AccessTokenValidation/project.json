@@ -12,7 +12,7 @@
 
   "dependencies": {
     "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0",
-    "IdentityModel.AspNetCore.OAuth2Introspection": "1.0.1",
+    "IdentityModel.AspNetCore.OAuth2Introspection": "2.0.0",
     "IdentityModel.AspNetCore.ScopeValidation": "1.0.0"
   },
 

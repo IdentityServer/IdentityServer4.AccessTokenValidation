@@ -107,8 +107,8 @@ namespace IdentityServer4.AccessTokenValidation
             {
                 AuthenticationScheme = options.AuthenticationScheme,
                 Authority = options.Authority,
-                ScopeName = options.ApiName,
-                ScopeSecret = options.ApiSecret,
+                ClientId = options.ApiName,
+                ClientSecret = options.ApiSecret,
 
                 AutomaticAuthenticate = options.AutomaticAuthenticate,
                 AutomaticChallenge = options.AutomaticChallenge,
