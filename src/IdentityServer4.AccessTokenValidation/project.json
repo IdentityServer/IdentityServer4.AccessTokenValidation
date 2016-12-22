@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1-rc5-*",
+  "version": "1.0.1-*",
   "authors": [ "Brock Allen", "Dominick Baier" ],
   "description": "ASP.NET Core middleware to validate JWT and reference tokens from IdentityServer4",
 
