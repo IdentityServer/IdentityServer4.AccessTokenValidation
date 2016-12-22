@@ -55,6 +55,11 @@ namespace IdentityServer4.AccessTokenValidation
                     throw new Exception("SupportedTokens has invalid value");
             }
 
+            combinedOptions.ScopeValidationOptions = new ScopeValidationOptions
+            {
+                AllowedScopes = new string[] { }
+            };
+
             if (options.ValidateScope)
             {
                 var allowedScopes = new List<string>();
@@ -66,22 +71,11 @@ namespace IdentityServer4.AccessTokenValidation
 
                 if (allowedScopes.Any())
                 {
-                    var scopeOptions = new ScopeValidationOptions
+                    combinedOptions.ScopeValidationOptions = new ScopeValidationOptions
                     {
                         AllowedScopes = allowedScopes,
                         AuthenticationScheme = options.AuthenticationScheme
                     };
-
-                    combinedOptions.ScopeValidationOptions = scopeOptions;
-                }
-                else
-                {
-                    var scopeOptions = new ScopeValidationOptions
-                    {
-                        AllowedScopes = new string[] { }
-                    };
-
-                    combinedOptions.ScopeValidationOptions = scopeOptions;
                 }
             }
 
