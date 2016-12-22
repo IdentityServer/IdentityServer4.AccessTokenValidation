@@ -14,6 +14,8 @@ namespace IdentityServer4.AccessTokenValidation
 {
     public class IdentityServerAuthenticationMiddleware
     {
+        const string _tokenKey = "idsrv4:tokenvalidation:token";
+
         private readonly ILogger<IdentityServerAuthenticationMiddleware> _logger;
         private readonly CombinedAuthenticationOptions _options;
 
@@ -55,43 +57,56 @@ namespace IdentityServer4.AccessTokenValidation
         public async Task Invoke(HttpContext context)
         {
             var token = _options.TokenRetriever(context.Request);
+            bool removeToken = false;
 
-            if (token != null)
+            try
             {
-                context.Items.Add("idsrv4:tokenvalidation:token", token);
-
-                // seems to be a JWT
-                if (token.Contains('.'))
+                if (token != null)
                 {
-                    // see if local validation is setup
-                    if (_jwtNext != null)
-                    {
-                        await _jwtNext(context);
-                        return;
-                    }
-                    // otherwise use introspection endpoint
-                    if (_introspectionNext != null)
-                    {
-                        await _introspectionNext(context);
-                        return;
-                    }
+                    removeToken = true;
 
-                    _logger.LogWarning("No validator configured for JWT token");
+                    context.Items.Add(_tokenKey, token);
+
+                    // seems to be a JWT
+                    if (token.Contains('.'))
+                    {
+                        // see if local validation is setup
+                        if (_jwtNext != null)
+                        {
+                            await _jwtNext(context);
+                            return;
+                        }
+                        // otherwise use introspection endpoint
+                        if (_introspectionNext != null)
+                        {
+                            await _introspectionNext(context);
+                            return;
+                        }
+
+                        _logger.LogWarning("No validator configured for JWT token");
+                    }
+                    else
+                    {
+                        // use introspection endpoint
+                        if (_introspectionNext != null)
+                        {
+                            await _introspectionNext(context);
+                            return;
+                        }
+
+                        _logger.LogWarning("No validator configured for reference token. Ensure ApiName and ApiSecret have been configured to use introspection.");
+                    }
                 }
-                else
-                {
-                    // use introspection endpoint
-                    if (_introspectionNext != null)
-                    {
-                        await _introspectionNext(context);
-                        return;
-                    }
 
-                    _logger.LogWarning("No validator configured for reference token. Ensure ApiName and ApiSecret have been configured to use introspection.");
+                await _nopNext(context);
+            }
+            finally
+            {
+                if (removeToken)
+                {
+                    context.Items.Remove(_tokenKey);
                 }
             }
-
-            await _nopNext(context);
         }
     }
 }
