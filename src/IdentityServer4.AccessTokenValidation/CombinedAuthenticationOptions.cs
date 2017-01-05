@@ -167,7 +167,13 @@ namespace IdentityServer4.AccessTokenValidation
             // if API name is set, do an audience check
             if (!string.IsNullOrWhiteSpace(options.ApiName))
             {
-                jwtOptions.Audience = options.ApiName;
+                var resourceAudience = options.Authority;
+                if (!options.Authority.EndsWith("/"))
+                {
+                    resourceAudience += "/";
+                }
+
+                jwtOptions.TokenValidationParameters.ValidAudiences = new[] { options.ApiName, resourceAudience + "resources" };
             }
             else
             {
