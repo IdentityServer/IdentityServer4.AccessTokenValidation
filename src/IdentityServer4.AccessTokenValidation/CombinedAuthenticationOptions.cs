@@ -164,20 +164,14 @@ namespace IdentityServer4.AccessTokenValidation
                 jwtOptions.BackchannelHttpHandler = options.JwtBackChannelHandler;
             }
 
-            // if API name is set, do an audience check
-            if (!string.IsNullOrWhiteSpace(options.ApiName))
+            // if API name is set, do a strict audience check for
+            if (!string.IsNullOrWhiteSpace(options.ApiName) && !options.LegacyAudienceValidation)
             {
-                var resourceAudience = options.Authority;
-                if (!options.Authority.EndsWith("/"))
-                {
-                    resourceAudience += "/";
-                }
-
-                jwtOptions.TokenValidationParameters.ValidAudiences = new[] { options.ApiName, resourceAudience + "resources" };
+                jwtOptions.Audience = options.ApiName;
             }
             else
             {
-                // otherwise don't check the aud
+                // no audience validation, rely on scope checks only
                 jwtOptions.TokenValidationParameters.ValidateAudience = false;
             }
 

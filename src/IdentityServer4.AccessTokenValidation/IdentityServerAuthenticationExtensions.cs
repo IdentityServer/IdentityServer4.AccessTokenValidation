@@ -3,6 +3,7 @@
 
 
 using IdentityServer4.AccessTokenValidation;
+using Microsoft.Extensions.Logging;
 using System.Linq;
 
 namespace Microsoft.AspNetCore.Builder
@@ -11,6 +12,8 @@ namespace Microsoft.AspNetCore.Builder
     {
         public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, IdentityServerAuthenticationOptions options)
         {
+            app.Validate(options);
+
             var combinedOptions = CombinedAuthenticationOptions.FromIdentityServerAuthenticationOptions(options);
             app.UseIdentityServerAuthentication(combinedOptions);
 
@@ -19,7 +22,7 @@ namespace Microsoft.AspNetCore.Builder
 
         public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, CombinedAuthenticationOptions options)
         {
-            app.UseMiddleware<IdentityServerAuthenticationMiddleware>(app, options);    
+            app.UseMiddleware<IdentityServerAuthenticationMiddleware>(app, options);
 
             if (options.ScopeValidationOptions.AllowedScopes.Any())
             {
@@ -27,6 +30,18 @@ namespace Microsoft.AspNetCore.Builder
             }
 
             return app;
+        }
+
+        internal static void Validate(this IApplicationBuilder app, IdentityServerAuthenticationOptions options)
+        {
+            var loggerFactory = app.ApplicationServices.GetService(typeof(ILoggerFactory)) as ILoggerFactory;
+            if (loggerFactory == null) return;
+
+            var logger = loggerFactory.CreateLogger("IdentityServer4.AccessTokenValidation.Startup");
+            if (string.IsNullOrEmpty(options.ApiName) && !options.AllowedScopes.Any())
+            {
+                logger.LogInformation("Neither an ApiName nor allowed scopes are configured. It is recommended to configure some audience checking.");
+            }
         }
     }
 }
