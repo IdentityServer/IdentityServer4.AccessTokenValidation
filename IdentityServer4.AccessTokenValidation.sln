@@ -1,16 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26228.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{642583C7-84EA-467D-A3FD-C59A61DB6D16}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{11092602-6D12-4E4E-B657-105EAC3FFD2B}"
-	ProjectSection(SolutionItems) = preProject
-		global.json = global.json
-	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "IdentityServer4.AccessTokenValidation", "src\IdentityServer4.AccessTokenValidation\IdentityServer4.AccessTokenValidation.xproj", "{8C9E426B-68D5-4C34-B6FB-BD5AC2E03576}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.AccessTokenValidation", "src\IdentityServer4.AccessTokenValidation\IdentityServer4.AccessTokenValidation.csproj", "{8C9E426B-68D5-4C34-B6FB-BD5AC2E03576}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
