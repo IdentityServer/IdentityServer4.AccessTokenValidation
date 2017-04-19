@@ -121,5 +121,12 @@ namespace Microsoft.AspNetCore.Builder
         /// events for JWT middleware
         /// </summary>
         public IJwtBearerEvents JwtBearerEvents { get; set; } = new JwtBearerEvents();
+
+        /// <summary>
+        /// Specifies how often the cached copy of the discovery document should be refreshed.
+        /// If not set, it defaults to the default value of Microsoft's underlying configuration manager (which right now is 24h).
+        /// If you need more fine grained control, provide your own configuration manager on the JWT options.
+        /// </summary>
+        public TimeSpan? DiscoveryDocumentRefreshInterval { get; set; }
     }
 }

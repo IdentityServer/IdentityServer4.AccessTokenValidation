@@ -2,13 +2,17 @@
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
 
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 
 namespace IdentityServer4.AccessTokenValidation
 {
@@ -158,6 +162,27 @@ namespace IdentityServer4.AccessTokenValidation
                     OnChallenge = e => options.JwtBearerEvents.Challenge(e)
                 }
             };
+
+            if (options.DiscoveryDocumentRefreshInterval.HasValue)
+            {
+                var parsedUrl = DiscoveryClient.ParseUrl(options.Authority);
+
+                var httpClient = new HttpClient(options.JwtBackChannelHandler ?? new HttpClientHandler())
+                {
+                    Timeout = options.BackChannelTimeouts,
+                    MaxResponseContentBufferSize = 1024 * 1024 * 10 // 10 MB
+                };
+
+                var manager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                    parsedUrl.discoveryEndpoint,
+                    new OpenIdConnectConfigurationRetriever(),
+                    new HttpDocumentRetriever(httpClient) { RequireHttps = options.RequireHttpsMetadata })
+                {
+                    AutomaticRefreshInterval = options.DiscoveryDocumentRefreshInterval.Value
+                };
+
+                jwtOptions.ConfigurationManager = manager;
+            }
 
             if (options.JwtBackChannelHandler != null)
             {

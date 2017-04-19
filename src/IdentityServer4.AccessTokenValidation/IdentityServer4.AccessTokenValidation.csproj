@@ -21,6 +21,7 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.1.3" />
     <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="2.1.0" />
     <PackageReference Include="IdentityModel.AspNetCore.ScopeValidation" Version="1.1.0" />
+    <PackageReference Include="IdentityModel" Version="2.8.0" />
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
