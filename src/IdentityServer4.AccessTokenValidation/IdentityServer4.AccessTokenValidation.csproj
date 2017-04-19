@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>ASP.NET Core middleware to validate JWT and reference tokens from IdentityServer4</Description>
-    <VersionPrefix>1.1.0</VersionPrefix>
+    <VersionPrefix>1.2.0</VersionPrefix>
     <Authors>Brock Allen;Dominick Baier</Authors>
     <TargetFrameworks>netstandard1.4;net452</TargetFrameworks>
     <AssemblyName>IdentityServer4.AccessTokenValidation</AssemblyName>
