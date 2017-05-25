@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace IdentityServer4.AccessTokenValidation
@@ -56,7 +57,13 @@ namespace IdentityServer4.AccessTokenValidation
 
         public async Task Invoke(HttpContext context)
         {
-            var token = _options.TokenRetriever(context.Request);
+
+#if NET452
+			// The following line forces HttpClient to negotiate with latest versions of TLS when targeting your build at NET452
+			System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+#endif
+
+			var token = _options.TokenRetriever(context.Request);
             bool removeToken = false;
 
             try
