@@ -1,26 +1,26 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-
-using IdentityModel.AspNetCore.OAuth2Introspection;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
+using IdentityModel.AspNetCore.OAuth2Introspection;
+using IdentityModel.Client;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Microsoft.AspNetCore.Builder
 {
-    public class IdentityServerAuthenticationOptions : AuthenticationOptions
+    public class IdentityServerAuthenticationOptions : AuthenticationSchemeOptions
     {
-        public IdentityServerAuthenticationOptions()
-        {
-            AuthenticationScheme = "Bearer";
-            AutomaticAuthenticate = true;
-            AutomaticChallenge = true;
-        }
+        static readonly Func<HttpRequest, string> _internalTokenRetriever = request => request.HttpContext.Items[IdentityServerAuthenticationDefaults.TokenItemsKey] as string;
+
+        internal static string EffectiveScheme { get; set; }
 
         /// <summary>
         /// Base-address of the token issuer
@@ -31,7 +31,7 @@ namespace Microsoft.AspNetCore.Builder
         /// Specifies whether HTTPS is required for the discovery endpoint
         /// </summary>
         public bool RequireHttpsMetadata { get; set; } = true;
-        
+
         /// <summary>
         /// Specifies which token types are supported (JWT, reference or both)
         /// </summary>
@@ -116,11 +116,12 @@ namespace Microsoft.AspNetCore.Builder
         /// timeout for back-channel operations
         /// </summary>
         public TimeSpan BackChannelTimeouts { get; set; } = TimeSpan.FromSeconds(60);
-        
+
+        // todo
         /// <summary>
         /// events for JWT middleware
         /// </summary>
-        public IJwtBearerEvents JwtBearerEvents { get; set; } = new JwtBearerEvents();
+        public JwtBearerEvents JwtBearerEvents { get; set; } = new JwtBearerEvents();
 
         /// <summary>
         /// Specifies how often the cached copy of the discovery document should be refreshed.
@@ -128,5 +129,117 @@ namespace Microsoft.AspNetCore.Builder
         /// If you need more fine grained control, provide your own configuration manager on the JWT options.
         /// </summary>
         public TimeSpan? DiscoveryDocumentRefreshInterval { get; set; }
+
+        public bool SupportsJwt => SupportedTokens == SupportedTokens.Jwt || SupportedTokens == SupportedTokens.Both;
+        public bool SupportsIntrospection => SupportedTokens == SupportedTokens.Reference || SupportedTokens == SupportedTokens.Both;
+
+        public void ConfigureJwtBearer(JwtBearerOptions jwtOptions)
+        {
+            jwtOptions.Authority = Authority;
+            jwtOptions.RequireHttpsMetadata = RequireHttpsMetadata;
+            jwtOptions.BackchannelTimeout = BackChannelTimeouts;
+            jwtOptions.RefreshOnIssuerKeyNotFound = true;
+            jwtOptions.SaveToken = SaveToken;
+            jwtOptions.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = e =>
+                {
+                    e.Token = _internalTokenRetriever(e.Request);
+                    return JwtBearerEvents.MessageReceived(e);
+                },
+
+                OnTokenValidated = e => JwtBearerEvents.TokenValidated(e),
+                OnAuthenticationFailed = e => JwtBearerEvents.AuthenticationFailed(e),
+                OnChallenge = e => JwtBearerEvents.Challenge(e)
+            };
+
+            if (DiscoveryDocumentRefreshInterval.HasValue)
+            {
+                var parsedUrl = DiscoveryClient.ParseUrl(Authority);
+
+                var httpClient = new HttpClient(JwtBackChannelHandler ?? new HttpClientHandler())
+                {
+                    Timeout = BackChannelTimeouts,
+                    MaxResponseContentBufferSize = 1024 * 1024 * 10 // 10 MB
+                };
+
+                var manager = new ConfigurationManager<OpenIdConnectConfiguration>(
+                    parsedUrl.discoveryEndpoint,
+                    new OpenIdConnectConfigurationRetriever(),
+                    new HttpDocumentRetriever(httpClient) { RequireHttps = RequireHttpsMetadata })
+                {
+                    AutomaticRefreshInterval = DiscoveryDocumentRefreshInterval.Value
+                };
+
+                jwtOptions.ConfigurationManager = manager;
+            }
+
+            if (JwtBackChannelHandler != null)
+            {
+                jwtOptions.BackchannelHttpHandler = JwtBackChannelHandler;
+            }
+
+            // if API name is set, do a strict audience check for
+            if (!string.IsNullOrWhiteSpace(ApiName) && !LegacyAudienceValidation)
+            {
+                jwtOptions.Audience = ApiName;
+            }
+            else
+            {
+                // no audience validation, rely on scope checks only
+                jwtOptions.TokenValidationParameters.ValidateAudience = false;
+            }
+
+            jwtOptions.TokenValidationParameters.NameClaimType = NameClaimType;
+            jwtOptions.TokenValidationParameters.RoleClaimType = RoleClaimType;
+
+            if (InboundJwtClaimTypeMap != null)
+            {
+                var handler = new JwtSecurityTokenHandler
+                {
+                    InboundClaimTypeMap = InboundJwtClaimTypeMap
+                };
+
+                jwtOptions.SecurityTokenValidators.Clear();
+                jwtOptions.SecurityTokenValidators.Add(handler);
+            }
+        }
+
+        public void ConfigureIntrospection(OAuth2IntrospectionOptions introspectionOptions)
+        {
+            if (String.IsNullOrWhiteSpace(ApiSecret))
+            {
+                return;
+            }
+
+            if (String.IsNullOrWhiteSpace(ApiName))
+            {
+                throw new ArgumentException("ApiName must be configured if ApiSecret is set.");
+            }
+
+            introspectionOptions.Authority = Authority;
+            introspectionOptions.ClientId = ApiName;
+            introspectionOptions.ClientSecret = ApiSecret;
+            introspectionOptions.NameClaimType = NameClaimType;
+            introspectionOptions.RoleClaimType = RoleClaimType;
+            introspectionOptions.TokenRetriever = _internalTokenRetriever;
+            introspectionOptions.SaveToken = SaveToken;
+
+            introspectionOptions.EnableCaching = EnableCaching;
+            introspectionOptions.CacheDuration = CacheDuration;
+
+            introspectionOptions.DiscoveryTimeout = BackChannelTimeouts;
+            introspectionOptions.IntrospectionTimeout = BackChannelTimeouts;
+
+
+            if (IntrospectionBackChannelHandler != null)
+            {
+                introspectionOptions.IntrospectionHttpHandler = IntrospectionBackChannelHandler;
+            }
+            if (IntrospectionDiscoveryHandler != null)
+            {
+                introspectionOptions.DiscoveryHttpHandler = IntrospectionDiscoveryHandler;
+            }
+        }
     }
 }

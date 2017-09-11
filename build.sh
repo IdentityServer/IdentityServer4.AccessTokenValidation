@@ -93,6 +93,10 @@ if [ ! -f "$CAKE_EXE" ]; then
     exit 1
 fi
 
+# Dump dotnet version info to console 
+dotnet --info
+dotnet
+
 # Start Cake
 if $SHOW_VERSION; then
     exec mono "$CAKE_EXE" -version

@@ -1,47 +1,55 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-
+using System;
 using IdentityServer4.AccessTokenValidation;
-using Microsoft.Extensions.Logging;
-using System.Linq;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.AspNetCore.Builder
 {
     public static class IdentityServerAuthenticationExtensions
     {
-        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, IdentityServerAuthenticationOptions options)
+        public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder)
+            => builder.AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme);
+
+        public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder, string authenticationScheme)
+            => builder.AddIdentityServerAuthentication(authenticationScheme, configureOptions: null);
+
+        public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder, Action<IdentityServerAuthenticationOptions> configureOptions) =>
+            builder.AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme, configureOptions);
+
+        public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder, string authenticationScheme, Action<IdentityServerAuthenticationOptions> configureOptions)
         {
-            app.Validate(options);
+            builder.AddJwtBearer(IdentityServerAuthenticationDefaults.JwtAuthenticationScheme, configureOptions: null);
+            builder.AddOAuth2Introspection(IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme, null, configureOptions: null);
 
-            var combinedOptions = CombinedAuthenticationOptions.FromIdentityServerAuthenticationOptions(options);
-            app.UseIdentityServerAuthentication(combinedOptions);
+            builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>, ConfigureInternalOptions>();
+            builder.Services.AddSingleton<IConfigureOptions<OAuth2IntrospectionOptions>, ConfigureInternalOptions>();
 
-            return app;
+            IdentityServerAuthenticationOptions.EffectiveScheme = authenticationScheme;
+            return builder.AddScheme<IdentityServerAuthenticationOptions, IdentityServerAuthenticationHandler>(authenticationScheme, configureOptions);
         }
 
-        public static IApplicationBuilder UseIdentityServerAuthentication(this IApplicationBuilder app, CombinedAuthenticationOptions options)
+        public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder, string authenticationScheme, 
+            Action<IdentityServerAuthenticationOptions> configureOptions,
+            Action<JwtBearerOptions> jwtBearerOptions,
+            Action<OAuth2IntrospectionOptions> introspectionOptions)
         {
-            app.UseMiddleware<IdentityServerAuthenticationMiddleware>(app, options);
-
-            if (options.ScopeValidationOptions.AllowedScopes.Any())
+            if (jwtBearerOptions != null)
             {
-                app.AllowScopes(options.ScopeValidationOptions);
+                builder.AddJwtBearer(IdentityServerAuthenticationDefaults.JwtAuthenticationScheme, jwtBearerOptions);
             }
 
-            return app;
-        }
-
-        internal static void Validate(this IApplicationBuilder app, IdentityServerAuthenticationOptions options)
-        {
-            var loggerFactory = app.ApplicationServices.GetService(typeof(ILoggerFactory)) as ILoggerFactory;
-            if (loggerFactory == null) return;
-
-            var logger = loggerFactory.CreateLogger("IdentityServer4.AccessTokenValidation.Startup");
-            if (string.IsNullOrEmpty(options.ApiName) && !options.AllowedScopes.Any())
+            if (introspectionOptions != null)
             {
-                logger.LogInformation("Neither an ApiName nor allowed scopes are configured. It is recommended to configure some audience checking.");
+                builder.AddOAuth2Introspection(IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme, null, introspectionOptions);
             }
+
+            IdentityServerAuthenticationOptions.EffectiveScheme = authenticationScheme;
+            return builder.AddScheme<IdentityServerAuthenticationOptions, IdentityServerAuthenticationHandler>(authenticationScheme, configureOptions);
         }
     }
 }

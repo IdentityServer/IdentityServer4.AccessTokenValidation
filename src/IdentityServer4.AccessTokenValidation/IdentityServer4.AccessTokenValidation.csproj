@@ -1,32 +1,14 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>ASP.NET Core middleware to validate JWT and reference tokens from IdentityServer4</Description>
-    <VersionPrefix>1.2.1</VersionPrefix>
-    <Authors>Brock Allen;Dominick Baier</Authors>
-    <TargetFrameworks>netstandard1.4;net452</TargetFrameworks>
-    <AssemblyName>IdentityServer4.AccessTokenValidation</AssemblyName>
-    <PackageId>IdentityServer4.AccessTokenValidation</PackageId>
-    <PackageTags>OAuth2;OAuth 2.0;OpenID Connect;Security;Identity;IdentityServer;Bearer tokens</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/IdentityServer/Artwork/master/Logos/IDserver_icon128.jpg</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation/LICENSE</PackageLicenseUrl>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>2.0.0</VersionPrefix>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.2" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.1.3" />
-    <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="2.1.1" />
-    <PackageReference Include="IdentityModel.AspNetCore.ScopeValidation" Version="1.1.1" />
-    <PackageReference Include="IdentityModel" Version="2.8.1" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="3.0.0-rc1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.0.0" />
   </ItemGroup>
 
 </Project>
