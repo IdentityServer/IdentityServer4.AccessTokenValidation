@@ -3,6 +3,7 @@
 
 using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +27,7 @@ namespace Tests.Util
                 {
                     app.UseAuthentication();
 
-                    app.Use(async (context, next) =>
+                    app.Use((context, next) =>
                     {
                         var user = context.User;
 
@@ -38,6 +39,8 @@ namespace Tests.Util
                         {
                             context.Response.StatusCode = 401;
                         }
+
+                        return Task.CompletedTask;
                     });
                 }));
         }
