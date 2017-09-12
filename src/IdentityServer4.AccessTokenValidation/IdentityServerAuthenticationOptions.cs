@@ -231,6 +231,7 @@ namespace Microsoft.AspNetCore.Builder
             introspectionOptions.DiscoveryTimeout = BackChannelTimeouts;
             introspectionOptions.IntrospectionTimeout = BackChannelTimeouts;
 
+            introspectionOptions.DiscoveryPolicy.RequireHttps = RequireHttpsMetadata;
 
             if (IntrospectionBackChannelHandler != null)
             {
