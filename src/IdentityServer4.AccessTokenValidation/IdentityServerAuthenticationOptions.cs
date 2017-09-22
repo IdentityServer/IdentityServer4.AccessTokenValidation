@@ -19,7 +19,6 @@ namespace Microsoft.AspNetCore.Builder
     public class IdentityServerAuthenticationOptions : AuthenticationSchemeOptions
     {
         static readonly Func<HttpRequest, string> _internalTokenRetriever = request => request.HttpContext.Items[IdentityServerAuthenticationDefaults.TokenItemsKey] as string;
-
         internal static string EffectiveScheme { get; set; }
 
         /// <summary>
@@ -56,16 +55,6 @@ namespace Microsoft.AspNetCore.Builder
         /// Enable if this API is being secure by IdentityServer3, and if you need to support both JWTs and reference tokens.
         /// </summary>
         public bool LegacyAudienceValidation { get; set; } = false;
-
-        /// <summary>
-        /// Allowed scope names used for validation
-        /// </summary>
-        public ICollection<string> AllowedScopes { get; set; } = new HashSet<string>();
-
-        /// <summary>
-        /// Specifies whether the scopes should be validated or not
-        /// </summary>
-        public bool ValidateScope { get; set; } = true;
 
         /// <summary>
         /// Claim type for name
@@ -237,6 +226,7 @@ namespace Microsoft.AspNetCore.Builder
             {
                 introspectionOptions.IntrospectionHttpHandler = IntrospectionBackChannelHandler;
             }
+
             if (IntrospectionDiscoveryHandler != null)
             {
                 introspectionOptions.DiscoveryHttpHandler = IntrospectionDiscoveryHandler;
