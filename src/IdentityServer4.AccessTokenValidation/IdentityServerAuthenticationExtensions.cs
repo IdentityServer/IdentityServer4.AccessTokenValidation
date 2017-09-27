@@ -23,13 +23,21 @@ namespace Microsoft.AspNetCore.Builder
 
         public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder, string authenticationScheme, Action<IdentityServerAuthenticationOptions> configureOptions)
         {
-            builder.AddJwtBearer(IdentityServerAuthenticationDefaults.JwtAuthenticationScheme, configureOptions: null);
-            builder.AddOAuth2Introspection(IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme, null, configureOptions: null);
+            builder.AddJwtBearer(authenticationScheme + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme, configureOptions: null);
+            builder.AddOAuth2Introspection(authenticationScheme + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme, configureOptions: null);
 
-            builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>, ConfigureInternalOptions>();
-            builder.Services.AddSingleton<IConfigureOptions<OAuth2IntrospectionOptions>, ConfigureInternalOptions>();
-
-            IdentityServerAuthenticationOptions.EffectiveScheme = authenticationScheme;
+            builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>>(services =>
+            {
+                var monitor = services.GetRequiredService<IOptionsMonitor<IdentityServerAuthenticationOptions>>();
+                return new ConfigureInternalOptions(monitor.Get(authenticationScheme));
+            });
+            
+            builder.Services.AddSingleton<IConfigureOptions<OAuth2IntrospectionOptions>>(services =>
+            {
+                var monitor = services.GetRequiredService<IOptionsMonitor<IdentityServerAuthenticationOptions>>();
+                return new ConfigureInternalOptions(monitor.Get(authenticationScheme));
+            });
+            
             return builder.AddScheme<IdentityServerAuthenticationOptions, IdentityServerAuthenticationHandler>(authenticationScheme, configureOptions);
         }
 
@@ -40,15 +48,14 @@ namespace Microsoft.AspNetCore.Builder
         {
             if (jwtBearerOptions != null)
             {
-                builder.AddJwtBearer(IdentityServerAuthenticationDefaults.JwtAuthenticationScheme, jwtBearerOptions);
+                builder.AddJwtBearer(authenticationScheme + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme, jwtBearerOptions);
             }
 
             if (introspectionOptions != null)
             {
-                builder.AddOAuth2Introspection(IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme, null, introspectionOptions);
+                builder.AddOAuth2Introspection(authenticationScheme + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme, introspectionOptions);
             }
 
-            IdentityServerAuthenticationOptions.EffectiveScheme = authenticationScheme;
             return builder.AddScheme<IdentityServerAuthenticationOptions, IdentityServerAuthenticationHandler>(authenticationScheme, configureOptions);
         }
     }

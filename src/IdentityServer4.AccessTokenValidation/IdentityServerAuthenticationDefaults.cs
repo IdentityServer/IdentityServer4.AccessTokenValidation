@@ -7,8 +7,8 @@ namespace IdentityServer4.AccessTokenValidation
     {
         public const string AuthenticationScheme = "Bearer";
 
-        public const string IntrospectionAuthenticationScheme = "IdentityServerAuthenticationIntrospection";
-        public const string JwtAuthenticationScheme = "IdentityServerAuthenticationJwt";
-        public const string TokenItemsKey = "idsrv4:tokenvalidation:token";
+        internal const string IntrospectionAuthenticationScheme = "IdentityServerAuthenticationIntrospection";
+        internal const string JwtAuthenticationScheme = "IdentityServerAuthenticationJwt";
+        internal const string TokenItemsKey = "idsrv4:tokenvalidation:token";
     }
 }

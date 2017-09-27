@@ -1,14 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <VersionPrefix>2.0.0</VersionPrefix>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="3.0.0-rc1" />
+    <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="3.0.0-rc2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.0.0" />
   </ItemGroup>
-
 </Project>

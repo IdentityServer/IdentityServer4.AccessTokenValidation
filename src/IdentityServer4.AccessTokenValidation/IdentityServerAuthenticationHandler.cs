@@ -41,11 +41,11 @@ namespace Microsoft.AspNetCore.Builder
                     // seems to be a JWT
                     if (token.Contains('.') && Options.SupportsJwt)
                     {
-                        return await Context.AuthenticateAsync(IdentityServerAuthenticationDefaults.JwtAuthenticationScheme);
+                        return await Context.AuthenticateAsync(Scheme.Name + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme);
                     }
                     else if (Options.SupportsIntrospection)
                     {
-                        return await Context.AuthenticateAsync(IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme);
+                        return await Context.AuthenticateAsync(Scheme.Name + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme);
                     }
                 }
 

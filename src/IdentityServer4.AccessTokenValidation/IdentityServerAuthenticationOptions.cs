@@ -19,8 +19,7 @@ namespace Microsoft.AspNetCore.Builder
     public class IdentityServerAuthenticationOptions : AuthenticationSchemeOptions
     {
         static readonly Func<HttpRequest, string> _internalTokenRetriever = request => request.HttpContext.Items[IdentityServerAuthenticationDefaults.TokenItemsKey] as string;
-        internal static string EffectiveScheme { get; set; }
-
+        
         /// <summary>
         /// Base-address of the token issuer
         /// </summary>

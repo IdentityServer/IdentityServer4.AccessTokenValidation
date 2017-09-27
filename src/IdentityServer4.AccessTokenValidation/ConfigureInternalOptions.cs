@@ -13,9 +13,9 @@ namespace IdentityServer4.AccessTokenValidation
     {
         private readonly IdentityServerAuthenticationOptions _identityServerOptions;
 
-        public ConfigureInternalOptions(IOptionsMonitor<IdentityServerAuthenticationOptions> identityServerOptions)
+        public ConfigureInternalOptions(IdentityServerAuthenticationOptions identityServerOptions)
         {
-            _identityServerOptions = identityServerOptions.Get(IdentityServerAuthenticationOptions.EffectiveScheme);
+            _identityServerOptions = identityServerOptions;
         }
 
         public void Configure(string name, JwtBearerOptions options)
