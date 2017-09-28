@@ -12,15 +12,17 @@ namespace IdentityServer4.AccessTokenValidation
         IConfigureNamedOptions<OAuth2IntrospectionOptions>
     {
         private readonly IdentityServerAuthenticationOptions _identityServerOptions;
+        private string _scheme;
 
-        public ConfigureInternalOptions(IdentityServerAuthenticationOptions identityServerOptions)
+        public ConfigureInternalOptions(IdentityServerAuthenticationOptions identityServerOptions, string scheme)
         {
             _identityServerOptions = identityServerOptions;
+            _scheme = scheme;
         }
 
         public void Configure(string name, JwtBearerOptions options)
         {
-            if (name == IdentityServerAuthenticationDefaults.JwtAuthenticationScheme &&
+            if (name == _scheme + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme &&
                 _identityServerOptions.SupportsJwt)
             {
                 _identityServerOptions.ConfigureJwtBearer(options);
@@ -29,7 +31,7 @@ namespace IdentityServer4.AccessTokenValidation
 
         public void Configure(string name, OAuth2IntrospectionOptions options)
         {
-            if (name == IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme &&
+            if (name == _scheme + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme &&
                 _identityServerOptions.SupportsIntrospection)
             {
                 _identityServerOptions.ConfigureIntrospection(options);

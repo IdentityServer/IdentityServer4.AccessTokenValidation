@@ -29,13 +29,13 @@ namespace Microsoft.AspNetCore.Builder
             builder.Services.AddSingleton<IConfigureOptions<JwtBearerOptions>>(services =>
             {
                 var monitor = services.GetRequiredService<IOptionsMonitor<IdentityServerAuthenticationOptions>>();
-                return new ConfigureInternalOptions(monitor.Get(authenticationScheme));
+                return new ConfigureInternalOptions(monitor.Get(authenticationScheme), authenticationScheme);
             });
             
             builder.Services.AddSingleton<IConfigureOptions<OAuth2IntrospectionOptions>>(services =>
             {
                 var monitor = services.GetRequiredService<IOptionsMonitor<IdentityServerAuthenticationOptions>>();
-                return new ConfigureInternalOptions(monitor.Get(authenticationScheme));
+                return new ConfigureInternalOptions(monitor.Get(authenticationScheme), authenticationScheme);
             });
             
             return builder.AddScheme<IdentityServerAuthenticationOptions, IdentityServerAuthenticationHandler>(authenticationScheme, configureOptions);
