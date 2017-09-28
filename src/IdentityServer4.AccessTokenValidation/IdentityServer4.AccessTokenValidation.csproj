@@ -2,6 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <VersionPrefix>2.0.0</VersionPrefix>
+    <!--<VersionSuffix>rc2</VersionSuffix>-->
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="3.0.0-rc2" />
