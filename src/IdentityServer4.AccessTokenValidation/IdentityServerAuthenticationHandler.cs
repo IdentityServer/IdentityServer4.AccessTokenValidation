@@ -11,6 +11,9 @@ using Microsoft.Extensions.Options;
 
 namespace Microsoft.AspNetCore.Builder
 {
+    /// <summary>
+    /// Authentication handler for validating both JWT and reference tokens
+    /// </summary>
     public class IdentityServerAuthenticationHandler : AuthenticationHandler<IdentityServerAuthenticationOptions>
     {
         private readonly ILogger<IdentityServerAuthenticationHandler> _logger;
@@ -26,7 +29,10 @@ namespace Microsoft.AspNetCore.Builder
             _logger = logger.CreateLogger<IdentityServerAuthenticationHandler>();
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Tries to validate a token on the current request
+        /// </summary>
+        /// <returns></returns>
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             var token = Options.TokenRetriever(Context.Request);

@@ -16,6 +16,9 @@ using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Microsoft.AspNetCore.Builder
 {
+    /// <summary>
+    /// Options for IdentityServer authentication
+    /// </summary>
     public class IdentityServerAuthenticationOptions : AuthenticationSchemeOptions
     {
         static readonly Func<HttpRequest, string> _internalTokenRetriever = request => request.HttpContext.Items[IdentityServerAuthenticationDefaults.TokenItemsKey] as string;
@@ -119,10 +122,17 @@ namespace Microsoft.AspNetCore.Builder
         /// </summary>
         public TimeSpan? DiscoveryDocumentRefreshInterval { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether JWTs are supported.
+        /// </summary>
         public bool SupportsJwt => SupportedTokens == SupportedTokens.Jwt || SupportedTokens == SupportedTokens.Both;
+
+        /// <summary>
+        /// Gets a value indicating whether reference tokens are supported.
+        /// </summary>
         public bool SupportsIntrospection => SupportedTokens == SupportedTokens.Reference || SupportedTokens == SupportedTokens.Both;
 
-        public void ConfigureJwtBearer(JwtBearerOptions jwtOptions)
+        internal void ConfigureJwtBearer(JwtBearerOptions jwtOptions)
         {
             jwtOptions.Authority = Authority;
             jwtOptions.RequireHttpsMetadata = RequireHttpsMetadata;
@@ -194,7 +204,7 @@ namespace Microsoft.AspNetCore.Builder
             }
         }
 
-        public void ConfigureIntrospection(OAuth2IntrospectionOptions introspectionOptions)
+        internal void ConfigureIntrospection(OAuth2IntrospectionOptions introspectionOptions)
         {
             if (String.IsNullOrWhiteSpace(ApiSecret))
             {

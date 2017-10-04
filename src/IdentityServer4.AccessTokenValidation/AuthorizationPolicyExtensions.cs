@@ -5,6 +5,9 @@ using IdentityModel;
 
 namespace Microsoft.AspNetCore.Authorization
 {
+    /// <summary>
+    /// Extensions for creating scope related authorization policies
+    /// </summary>
     public static class AuthorizationPolicyBuilderExtensions
     {
         /// <summary>
@@ -19,6 +22,9 @@ namespace Microsoft.AspNetCore.Authorization
         }
     }
 
+    /// <summary>
+    /// Helper for creating scope-related policies
+    /// </summary>
     public static class ScopePolicy
     {
         /// <summary>

@@ -10,17 +10,44 @@ using Microsoft.Extensions.Options;
 
 namespace Microsoft.AspNetCore.Builder
 {
+    /// <summary>
+    /// Extensions for registering the IdentityServer authentication handler
+    /// </summary>
     public static class IdentityServerAuthenticationExtensions
     {
+        /// <summary>
+        /// Registers the IdentityServer authentication handler.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <returns></returns>
         public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder)
             => builder.AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme);
 
+        /// <summary>
+        /// Registers the IdentityServer authentication handler.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="authenticationScheme">The authentication scheme.</param>
+        /// <returns></returns>
         public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder, string authenticationScheme)
             => builder.AddIdentityServerAuthentication(authenticationScheme, configureOptions: null);
 
+        /// <summary>
+        /// Registers the IdentityServer authentication handler.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="configureOptions">The configure options.</param>
+        /// <returns></returns>
         public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder, Action<IdentityServerAuthenticationOptions> configureOptions) =>
             builder.AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme, configureOptions);
 
+        /// <summary>
+        /// Registers the IdentityServer authentication handler.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="authenticationScheme">The authentication scheme.</param>
+        /// <param name="configureOptions">The configure options.</param>
+        /// <returns></returns>
         public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder, string authenticationScheme, Action<IdentityServerAuthenticationOptions> configureOptions)
         {
             builder.AddJwtBearer(authenticationScheme + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme, configureOptions: null);
@@ -41,8 +68,15 @@ namespace Microsoft.AspNetCore.Builder
             return builder.AddScheme<IdentityServerAuthenticationOptions, IdentityServerAuthenticationHandler>(authenticationScheme, configureOptions);
         }
 
+        /// <summary>
+        /// Registers the IdentityServer authentication handler.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="authenticationScheme">The authentication scheme.</param>
+        /// <param name="jwtBearerOptions">The JWT bearer options.</param>
+        /// <param name="introspectionOptions">The introspection options.</param>
+        /// <returns></returns>
         public static AuthenticationBuilder AddIdentityServerAuthentication(this AuthenticationBuilder builder, string authenticationScheme, 
-            Action<IdentityServerAuthenticationOptions> configureOptions,
             Action<JwtBearerOptions> jwtBearerOptions,
             Action<OAuth2IntrospectionOptions> introspectionOptions)
         {
@@ -56,7 +90,7 @@ namespace Microsoft.AspNetCore.Builder
                 builder.AddOAuth2Introspection(authenticationScheme + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme, introspectionOptions);
             }
 
-            return builder.AddScheme<IdentityServerAuthenticationOptions, IdentityServerAuthenticationHandler>(authenticationScheme, configureOptions);
+            return builder.AddScheme<IdentityServerAuthenticationOptions, IdentityServerAuthenticationHandler>(authenticationScheme, (o) => { });
         }
     }
 }
