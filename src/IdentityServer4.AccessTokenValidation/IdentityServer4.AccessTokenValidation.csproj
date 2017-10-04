@@ -11,6 +11,12 @@
     <PackageProjectUrl>https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netstandard2.0\IdentityServer4.AccessTokenValidation.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\IdentityServer4.AccessTokenValidation.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.4.0" PrivateAssets="all" />
     <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="3.0.0" />

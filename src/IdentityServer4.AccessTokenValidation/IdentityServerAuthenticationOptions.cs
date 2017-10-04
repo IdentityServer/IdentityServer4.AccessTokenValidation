@@ -51,7 +51,8 @@ namespace Microsoft.AspNetCore.Builder
         public string ApiSecret { get; set; }
 
         /// <summary>
-        /// Enable if this API is being secure by IdentityServer3, and if you need to support both JWTs and reference tokens.
+        /// Enable if this API is being secured by IdentityServer3, and if you need to support both JWTs and reference tokens.
+        /// If you enable this, you should add scope validation for incoming JWTs.
         /// </summary>
         public bool LegacyAudienceValidation { get; set; } = false;
 

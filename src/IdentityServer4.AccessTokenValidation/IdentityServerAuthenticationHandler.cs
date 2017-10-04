@@ -15,6 +15,7 @@ namespace Microsoft.AspNetCore.Builder
     {
         private readonly ILogger<IdentityServerAuthenticationHandler> _logger;
 
+        /// <inheritdoc/>
         public IdentityServerAuthenticationHandler(
             IOptionsMonitor<IdentityServerAuthenticationOptions> options,
             ILoggerFactory logger,
@@ -25,6 +26,7 @@ namespace Microsoft.AspNetCore.Builder
             _logger = logger.CreateLogger<IdentityServerAuthenticationHandler>();
         }
 
+        /// <inheritdoc/>
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             var token = Options.TokenRetriever(Context.Request);
@@ -36,7 +38,7 @@ namespace Microsoft.AspNetCore.Builder
                 {
                     removeToken = true;
 
-                    Context.Items.Add(IdentityServerAuthenticationDefaults.TokenItemsKey, token);
+                    Context.Items.Add(Scheme.Name + IdentityServerAuthenticationDefaults.TokenItemsKey, token);
 
                     // seems to be a JWT
                     if (token.Contains('.') && Options.SupportsJwt)
@@ -55,7 +57,7 @@ namespace Microsoft.AspNetCore.Builder
             {
                 if (removeToken)
                 {
-                    Context.Items.Remove(IdentityServerAuthenticationDefaults.TokenItemsKey);
+                    Context.Items.Remove(Scheme.Name + IdentityServerAuthenticationDefaults.TokenItemsKey);
                 }
             }
         }

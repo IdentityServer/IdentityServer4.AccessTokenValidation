@@ -3,8 +3,14 @@
 
 namespace IdentityServer4.AccessTokenValidation
 {
+    /// <summary>
+    /// Constants for IdentityServer authentication.
+    /// </summary>
     public class IdentityServerAuthenticationDefaults
     {
+        /// <summary>
+        /// The authentication scheme
+        /// </summary>
         public const string AuthenticationScheme = "Bearer";
 
         internal const string IntrospectionAuthenticationScheme = "IdentityServerAuthenticationIntrospection";
