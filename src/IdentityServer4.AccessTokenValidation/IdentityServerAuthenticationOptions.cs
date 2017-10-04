@@ -21,7 +21,7 @@ namespace Microsoft.AspNetCore.Builder
     /// </summary>
     public class IdentityServerAuthenticationOptions : AuthenticationSchemeOptions
     {
-        static readonly Func<HttpRequest, string> _internalTokenRetriever = request => request.HttpContext.Items[IdentityServerAuthenticationDefaults.TokenItemsKey] as string;
+        static readonly Func<HttpRequest, string> InternalTokenRetriever = request => request.HttpContext.Items[IdentityServerAuthenticationDefaults.TokenItemsKey] as string;
         
         /// <summary>
         /// Base-address of the token issuer
@@ -143,7 +143,7 @@ namespace Microsoft.AspNetCore.Builder
             {
                 OnMessageReceived = e =>
                 {
-                    e.Token = _internalTokenRetriever(e.Request);
+                    e.Token = InternalTokenRetriever(e.Request);
                     return JwtBearerEvents.MessageReceived(e);
                 },
 
@@ -221,7 +221,7 @@ namespace Microsoft.AspNetCore.Builder
             introspectionOptions.ClientSecret = ApiSecret;
             introspectionOptions.NameClaimType = NameClaimType;
             introspectionOptions.RoleClaimType = RoleClaimType;
-            introspectionOptions.TokenRetriever = _internalTokenRetriever;
+            introspectionOptions.TokenRetriever = InternalTokenRetriever;
             introspectionOptions.SaveToken = SaveToken;
 
             introspectionOptions.EnableCaching = EnableCaching;
