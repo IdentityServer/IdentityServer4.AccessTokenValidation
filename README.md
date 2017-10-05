@@ -28,7 +28,7 @@ services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationSc
 ```
 
 ## Scope validation
-In addition to API name checking, you can do more fine-grained audience checks. This package includes some convenience helpers to do that.
+In addition to API name checking, you can do more fine-grained scope checks. This package includes some convenience helpers to do that.
 
 ### Create a global authorization policy
 
@@ -57,4 +57,4 @@ services.AddAuthorization(options =>
         builder.RequireScope("scope2", "scope3");
     });
 });
-```csharp
+```
