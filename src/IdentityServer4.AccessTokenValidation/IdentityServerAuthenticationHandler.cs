@@ -16,6 +16,8 @@ namespace Microsoft.AspNetCore.Builder
     /// </summary>
     public class IdentityServerAuthenticationHandler : AuthenticationHandler<IdentityServerAuthenticationOptions>
     {
+        private readonly ILogger _logger;
+
         /// <inheritdoc />
         public IdentityServerAuthenticationHandler(
             IOptionsMonitor<IdentityServerAuthenticationOptions> options,
@@ -23,7 +25,9 @@ namespace Microsoft.AspNetCore.Builder
             UrlEncoder encoder,
             ISystemClock clock)
             : base(options, logger, encoder, clock)
-        { }
+        {
+            _logger = logger.CreateLogger<IdentityServerAuthenticationHandler>();
+        }
 
         /// <summary>
         /// Tries to validate a token on the current request
@@ -31,6 +35,8 @@ namespace Microsoft.AspNetCore.Builder
         /// <returns></returns>
         protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
         {
+            _logger.LogTrace("HandleAuthenticateAsync called");
+
             var token = Options.TokenRetriever(Context.Request);
             bool removeToken = false;
 
@@ -38,6 +44,7 @@ namespace Microsoft.AspNetCore.Builder
             {
                 if (token != null)
                 {
+                    _logger.LogTrace("Token found: {token}", token);
                     removeToken = true;
 
                     Context.Items.Add(IdentityServerAuthenticationDefaults.TokenItemsKey, token);
@@ -45,11 +52,17 @@ namespace Microsoft.AspNetCore.Builder
                     // seems to be a JWT
                     if (token.Contains('.') && Options.SupportsJwt)
                     {
+                        _logger.LogTrace("Token is a JWT and is supported.");
                         return await Context.AuthenticateAsync(Scheme.Name + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme);
                     }
                     else if (Options.SupportsIntrospection)
                     {
+                        _logger.LogTrace("Token is a reference token and is supported.");
                         return await Context.AuthenticateAsync(Scheme.Name + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme);
+                    }
+                    else
+                    {
+                        _logger.LogTrace("Neither JWT nor reference tokens seem to be correctly configured for incoming token.");
                     }
                 }
 
