@@ -1,15 +1,14 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.Linq;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
-namespace Microsoft.AspNetCore.Builder
+namespace IdentityServer4.AccessTokenValidation
 {
     /// <summary>
     /// Authentication handler for validating both JWT and reference tokens
