@@ -90,6 +90,11 @@ namespace IdentityServer4.AccessTokenValidation
         public bool SaveToken { get; set; } = true;
 
         /// <summary>
+        /// specifies the allowed clock skew when validating JWT tokens
+        /// </summary>
+        public TimeSpan? JwtValidationClockSkew { get; set; }
+
+        /// <summary>
         /// back-channel handler for JWT middleware
         /// </summary>
         public HttpMessageHandler JwtBackChannelHandler { get; set; }
@@ -139,6 +144,7 @@ namespace IdentityServer4.AccessTokenValidation
             jwtOptions.BackchannelTimeout = BackChannelTimeouts;
             jwtOptions.RefreshOnIssuerKeyNotFound = true;
             jwtOptions.SaveToken = SaveToken;
+
             jwtOptions.Events = new JwtBearerEvents
             {
                 OnMessageReceived = e =>
@@ -191,6 +197,11 @@ namespace IdentityServer4.AccessTokenValidation
 
             jwtOptions.TokenValidationParameters.NameClaimType = NameClaimType;
             jwtOptions.TokenValidationParameters.RoleClaimType = RoleClaimType;
+
+            if (JwtValidationClockSkew.HasValue)
+            {
+                jwtOptions.TokenValidationParameters.ClockSkew = JwtValidationClockSkew.Value;
+            }
 
             if (InboundJwtClaimTypeMap != null)
             {
