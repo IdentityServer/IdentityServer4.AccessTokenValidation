@@ -1,6 +1,7 @@
 # IdentityServer4.AccessTokenValidation
-
 Authentication handler for ASP.NET Core 2 that allows accepting both JWTs and reference tokens in the same API.
+
+Technically this handler is a decorator over both the Microsoft [JWT handler](https://www.nuget.org/packages/Microsoft.AspNetCore.Authentication.JwtBearer/) as well as our OAuth 2 [introspection handler](https://www.nuget.org/packages/IdentityModel.AspNetCore.OAuth2Introspection/). If you only need to support one token type only, we recommend using the underlying handlers directly.
 
 ## JWT Usage
 Simply specify authority and API name (aka audience):
