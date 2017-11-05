@@ -28,6 +28,22 @@ services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationSc
     });
 ```
 
+## Specifying the underlying handler options directly
+In case you need access to a setting that the combined options don't expose, you can fallback to configuring the underlying handler directly.
+
+```csharp
+services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+    .AddIdentityServerAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme,
+        jwtOptions =>
+        {
+            // jwt bearer options
+        },
+        referenceOptions =>
+        {
+            // oauth2 introspection options
+        });
+```
+
 ## Scope validation
 In addition to API name checking, you can do more fine-grained scope checks. This package includes some convenience helpers to do that.
 
