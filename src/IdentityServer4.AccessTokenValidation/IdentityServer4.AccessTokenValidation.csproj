@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>2.1.0</VersionPrefix>
-    <!--<VersionSuffix>rc2</VersionSuffix>-->
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <VersionPrefix>2.2.0</VersionPrefix>
+    <VersionSuffix>preview1</VersionSuffix>
     <Description>ASP.NET Core middleware to validate JWT and reference tokens from IdentityServer4</Description>
     <Authors>Brock Allen;Dominick Baier</Authors>
     <PackageId>IdentityServer4.AccessTokenValidation</PackageId>
