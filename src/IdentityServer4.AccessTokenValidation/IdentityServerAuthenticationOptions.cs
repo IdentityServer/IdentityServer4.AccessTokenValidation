@@ -169,7 +169,7 @@ namespace IdentityServer4.AccessTokenValidation
                 };
 
                 var manager = new ConfigurationManager<OpenIdConnectConfiguration>(
-                    parsedUrl.discoveryEndpoint,
+                    parsedUrl.Url,
                     new OpenIdConnectConfigurationRetriever(),
                     new HttpDocumentRetriever(httpClient) { RequireHttps = RequireHttpsMetadata })
                 {
