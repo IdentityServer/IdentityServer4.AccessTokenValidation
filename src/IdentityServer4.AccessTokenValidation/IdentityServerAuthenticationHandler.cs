@@ -36,6 +36,9 @@ namespace IdentityServer4.AccessTokenValidation
         {
             _logger.LogTrace("HandleAuthenticateAsync called");
 
+            var jwtScheme = Scheme.Name + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme;
+            var introspectionScheme = Scheme.Name + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme;
+
             var token = Options.TokenRetriever(Context.Request);
             bool removeToken = false;
 
@@ -46,34 +49,34 @@ namespace IdentityServer4.AccessTokenValidation
                     _logger.LogTrace("Token found: {token}", token);
 
                     removeToken = true;
-                    var effectiveScheme = default(string);
-
                     Context.Items.Add(IdentityServerAuthenticationDefaults.TokenItemsKey, token);
 
                     // seems to be a JWT
                     if (token.Contains('.') && Options.SupportsJwt)
                     {
                         _logger.LogTrace("Token is a JWT and is supported.");
-                        effectiveScheme = Scheme.Name + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme;
+
                         
-                        return await Context.AuthenticateAsync(effectiveScheme);
+                        Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, jwtScheme);
+                        return await Context.AuthenticateAsync(jwtScheme);
                     }
                     else if (Options.SupportsIntrospection)
                     {
                         _logger.LogTrace("Token is a reference token and is supported.");
-                        effectiveScheme = Scheme.Name + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme;
 
-                        return await Context.AuthenticateAsync(effectiveScheme);
+                        Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, introspectionScheme);
+                        return await Context.AuthenticateAsync(introspectionScheme);
                     }
                     else
                     {
                         _logger.LogTrace("Neither JWT nor reference tokens seem to be correctly configured for incoming token.");
                     }
+                }
 
-                    if (!string.IsNullOrWhiteSpace(effectiveScheme))
-                    {
-                        Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, effectiveScheme);
-                    }
+                // set the default challenge handler to JwtBearer if supported
+                if (Options.SupportsJwt)
+                {
+                    Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, jwtScheme);
                 }
 
                 return AuthenticateResult.NoResult();
