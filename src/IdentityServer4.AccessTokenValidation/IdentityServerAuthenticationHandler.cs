@@ -36,6 +36,9 @@ namespace IdentityServer4.AccessTokenValidation
         {
             _logger.LogTrace("HandleAuthenticateAsync called");
 
+            var jwtScheme = Scheme.Name + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme;
+            var introspectionScheme = Scheme.Name + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme;
+
             var token = Options.TokenRetriever(Context.Request);
             bool removeToken = false;
 
@@ -44,25 +47,36 @@ namespace IdentityServer4.AccessTokenValidation
                 if (token != null)
                 {
                     _logger.LogTrace("Token found: {token}", token);
-                    removeToken = true;
 
+                    removeToken = true;
                     Context.Items.Add(IdentityServerAuthenticationDefaults.TokenItemsKey, token);
 
                     // seems to be a JWT
                     if (token.Contains('.') && Options.SupportsJwt)
                     {
                         _logger.LogTrace("Token is a JWT and is supported.");
-                        return await Context.AuthenticateAsync(Scheme.Name + IdentityServerAuthenticationDefaults.JwtAuthenticationScheme);
+
+                        
+                        Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, jwtScheme);
+                        return await Context.AuthenticateAsync(jwtScheme);
                     }
                     else if (Options.SupportsIntrospection)
                     {
                         _logger.LogTrace("Token is a reference token and is supported.");
-                        return await Context.AuthenticateAsync(Scheme.Name + IdentityServerAuthenticationDefaults.IntrospectionAuthenticationScheme);
+
+                        Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, introspectionScheme);
+                        return await Context.AuthenticateAsync(introspectionScheme);
                     }
                     else
                     {
                         _logger.LogTrace("Neither JWT nor reference tokens seem to be correctly configured for incoming token.");
                     }
+                }
+
+                // set the default challenge handler to JwtBearer if supported
+                if (Options.SupportsJwt)
+                {
+                    Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, jwtScheme);
                 }
 
                 return AuthenticateResult.NoResult();
@@ -73,6 +87,31 @@ namespace IdentityServer4.AccessTokenValidation
                 {
                     Context.Items.Remove(IdentityServerAuthenticationDefaults.TokenItemsKey);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Override this method to deal with 401 challenge concerns, if an authentication scheme in question
+        /// deals an authentication interaction as part of it's request flow. (like adding a response header, or
+        /// changing the 401 result to 302 of a login page or external sign-in location.)
+        /// </summary>
+        /// <param name="properties"></param>
+        /// <returns>
+        /// A Task.
+        /// </returns>
+        protected override async Task HandleChallengeAsync(AuthenticationProperties properties)
+        {
+            if (Context.Items.TryGetValue(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, out object value))
+            {
+                if (value is string scheme)
+                {
+                    _logger.LogTrace("Forwarding challenge to scheme: {scheme}", scheme);
+                    await Context.ChallengeAsync(scheme);
+                }
+            }
+            else
+            {
+                await base.HandleChallengeAsync(properties);
             }
         }
     }
