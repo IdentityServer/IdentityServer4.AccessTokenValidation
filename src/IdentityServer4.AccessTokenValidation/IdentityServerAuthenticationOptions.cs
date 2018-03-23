@@ -32,6 +32,11 @@ namespace IdentityServer4.AccessTokenValidation
         /// Specifies whether HTTPS is required for the discovery endpoint
         /// </summary>
         public bool RequireHttpsMetadata { get; set; } = true;
+    
+        /// <summary>
+        /// Specifies if the issuer name is checked to be identical to the authority
+        /// </summary>
+        public bool ValidateIssuer { get; set; } = true;
 
         /// <summary>
         /// Specifies which token types are supported (JWT, reference or both)
@@ -197,6 +202,7 @@ namespace IdentityServer4.AccessTokenValidation
 
             jwtOptions.TokenValidationParameters.NameClaimType = NameClaimType;
             jwtOptions.TokenValidationParameters.RoleClaimType = RoleClaimType;
+            jwtOptions.TokenValidationParameters.ValidateIssuer = ValidateIssuer;
 
             if (JwtValidationClockSkew.HasValue)
             {
@@ -242,6 +248,7 @@ namespace IdentityServer4.AccessTokenValidation
             introspectionOptions.IntrospectionTimeout = BackChannelTimeouts;
 
             introspectionOptions.DiscoveryPolicy.RequireHttps = RequireHttpsMetadata;
+            introspectionOptions.DiscoveryPolicy.ValidateIssuerName = ValidateIssuer;
 
             if (IntrospectionBackChannelHandler != null)
             {
