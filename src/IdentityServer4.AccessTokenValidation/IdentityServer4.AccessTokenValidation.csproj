@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <VersionPrefix>2.6.0</VersionPrefix>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <VersionPrefix>2.7.0</VersionPrefix>
     <!--<VersionSuffix>preview1</VersionSuffix>-->
     <Description>ASP.NET Core authentication handler to validate JWT and reference tokens from IdentityServer4</Description>
     <Authors>Brock Allen;Dominick Baier</Authors>
@@ -11,13 +11,20 @@
     <PackageProjectUrl>https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/IdentityServer/IdentityServer4.AccessTokenValidation/LICENSE</PackageLicenseUrl>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!-- Declare that the Repository URL can be published to NuSpec -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Embed source files that are not tracked by the source control manager to the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <!-- Include PDB in the built .nupkg -->
+    <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
   </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="3.4.1" />
-    <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.8.0" PrivateAssets="all" />
     
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.1.0" />
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta-62925-02" PrivateAssets="All" />
   </ItemGroup>
 </Project>
