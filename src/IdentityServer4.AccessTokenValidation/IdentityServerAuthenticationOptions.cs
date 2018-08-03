@@ -85,6 +85,11 @@ namespace IdentityServer4.AccessTokenValidation
         public TimeSpan CacheDuration { get; set; } = TimeSpan.FromMinutes(10);
 
         /// <summary>
+        /// Specifies the prefix of the cache key (token).
+        /// </summary>
+        public string CacheKeyPrefix { get; set; } = string.Empty;
+
+        /// <summary>
         /// specifies whether the token should be saved in the authentication properties
         /// </summary>
         public bool SaveToken { get; set; } = true;
@@ -237,6 +242,7 @@ namespace IdentityServer4.AccessTokenValidation
 
             introspectionOptions.EnableCaching = EnableCaching;
             introspectionOptions.CacheDuration = CacheDuration;
+            introspectionOptions.CacheKeyPrefix = CacheKeyPrefix;
 
             introspectionOptions.DiscoveryTimeout = BackChannelTimeouts;
             introspectionOptions.IntrospectionTimeout = BackChannelTimeouts;
