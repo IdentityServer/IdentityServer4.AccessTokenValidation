@@ -4,7 +4,7 @@ var configuration   = Argument<string>("configuration", "Release");
 ///////////////////////////////////////////////////////////////////////////////
 // GLOBAL VARIABLES
 ///////////////////////////////////////////////////////////////////////////////
-var packPath            = Directory("./src/IdentityServer4.AccessTokenValidation");
+var packPath            = Directory("./src");
 var buildArtifacts      = Directory("./artifacts/packages");
 
 var isAppVeyor          = AppVeyor.IsRunningOnAppVeyor;
@@ -55,7 +55,7 @@ Task("Test")
     if (!isWindows)
     {
         Information("Not running on Windows - skipping tests for .NET Framework");
-        settings.Framework = "netcoreapp2.0";
+        settings.Framework = "netcoreapp2.1";
     }
 
     var projects = GetFiles("./test/**/*.csproj");
@@ -77,7 +77,7 @@ Task("Pack")
     {
         Configuration = configuration,
         OutputDirectory = buildArtifacts,
-        ArgumentCustomization = args => args.Append("--include-symbols")
+        //ArgumentCustomization = args => args.Append("--include-symbols")
     };
 
     // add build suffix for CI builds

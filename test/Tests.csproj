@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IdentityServer4.AccessTokenValidation\IdentityServer4.AccessTokenValidation.csproj" />
+    <ProjectReference Include="..\src\IdentityServer4.AccessTokenValidation.csproj" />
   </ItemGroup>
 
 </Project>

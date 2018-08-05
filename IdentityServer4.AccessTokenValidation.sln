@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.AccessTokenValidation", "src\IdentityServer4.AccessTokenValidation\IdentityServer4.AccessTokenValidation.csproj", "{2DCB5D5A-BDEF-4C3D-89CA-141055FD1DFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentityServer4.AccessTokenValidation", "src\IdentityServer4.AccessTokenValidation.csproj", "{2DCB5D5A-BDEF-4C3D-89CA-141055FD1DFD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{358AD699-54F7-4718-B212-E3D8447AEC96}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B11A4B61-0BC4-4349-97D3-652BE2012E65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "test\Tests\Tests.csproj", "{5008F329-8CFC-4459-A957-2A2AF24CDC7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "test\Tests.csproj", "{5008F329-8CFC-4459-A957-2A2AF24CDC7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
