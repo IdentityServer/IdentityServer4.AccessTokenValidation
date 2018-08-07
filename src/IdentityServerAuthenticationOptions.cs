@@ -19,6 +19,7 @@ namespace IdentityServer4.AccessTokenValidation
     /// <summary>
     /// Options for IdentityServer authentication
     /// </summary>
+    /// <seealso cref="Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions" />
     public class IdentityServerAuthenticationOptions : AuthenticationSchemeOptions
     {
         static readonly Func<HttpRequest, string> InternalTokenRetriever = request => request.HttpContext.Items[IdentityServerAuthenticationDefaults.TokenItemsKey] as string;
@@ -88,6 +89,14 @@ namespace IdentityServer4.AccessTokenValidation
         /// Specifies the prefix of the cache key (token).
         /// </summary>
         public string CacheKeyPrefix { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the policay for the introspection discovery document.
+        /// </summary>
+        /// <value>
+        /// The introspection discovery policy.
+        /// </value>
+        public DiscoveryPolicy IntrospectionDiscoveryPolicy { get; set; } = new DiscoveryPolicy();
 
         /// <summary>
         /// specifies whether the token should be saved in the authentication properties
@@ -239,6 +248,7 @@ namespace IdentityServer4.AccessTokenValidation
             introspectionOptions.RoleClaimType = RoleClaimType;
             introspectionOptions.TokenRetriever = InternalTokenRetriever;
             introspectionOptions.SaveToken = SaveToken;
+            introspectionOptions.DiscoveryPolicy = IntrospectionDiscoveryPolicy;
 
             introspectionOptions.EnableCaching = EnableCaching;
             introspectionOptions.CacheDuration = CacheDuration;
