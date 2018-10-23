@@ -1,5 +1,5 @@
 $CakeVersion = "0.30.0"
-$DotNetVersion = "2.1.402";
+$DotNetVersion = "2.1.403";
 $DotNetInstallerUri = "https://dot.net/v1/dotnet-install.ps1";
 
 # Make sure tools folder exists
@@ -83,6 +83,24 @@ if ((!(Test-Path -Path $CakePath -PathType Container)) -or (!(Test-Path $CakeExe
         exit 1
     }
     $CakeExePath = (Get-ChildItem -Path $ToolPath -Filter "dotnet-cake*" -File| ForEach-Object FullName | Select-Object -First 1)
+}
+
+###########################################################################
+# INSTALL SignTool
+###########################################################################
+
+# Make sure Cake has been installed.
+$SignClientPath = Join-Path $ToolPath ".store\SignClient"
+$SignClientExePath = (Get-ChildItem -Path $ToolPath -Filter "SignClient*" -File| ForEach-Object FullName | Select-Object -First 1)
+
+if ((!(Test-Path -Path $SignClientPath -PathType Container)) -or (!(Test-Path $SignClientExePath -PathType Leaf))) {
+    & dotnet tool install --tool-path $ToolPath SignClient
+    if ($LASTEXITCODE -ne 0)
+    {
+        'Failed to install SignClient'
+        exit 1
+    }
+    $SignClientExePath = (Get-ChildItem -Path $ToolPath -Filter "signtool*" -File| ForEach-Object FullName | Select-Object -First 1)
 }
 
 ###########################################################################
