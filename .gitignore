@@ -18,7 +18,7 @@
 [Rr]eleases/
 x64/
 x86/
-build/
+
 bld/
 [Bb]in/
 [Oo]bj/
@@ -198,16 +198,11 @@ FakesAssemblies/
 *.opt
 docs/_build/
 
-# Cake Build Related
+# Local .NET CLI tools
 tools/
-.dotnet
 
 # Rider
 .idea
 
 # Visual Studio Code workspace options
 .vscode
-
-# IdentityServer temp files
-identityserver4_log.txt
-tempkey.rsa
