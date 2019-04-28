@@ -10,6 +10,20 @@ namespace Tests
 {
     public class UnitTest1
     {
+        /// <summary>
+        /// Tests this instance.
+        /// </summary>
+        /// <returns></returns>
+        [Fact]
+        public async Task test()
+        {
+            var client = PipelineFactory.CreateClient2();
+
+            var response = await client.GetAsync("http://api");
+
+            response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
+        }
+
         [Fact]
         public async Task no_token_should_return_401()
         {

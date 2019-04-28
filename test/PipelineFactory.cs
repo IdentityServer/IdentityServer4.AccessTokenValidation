@@ -45,6 +45,45 @@ namespace Tests.Util
                 }));
         }
 
+        public static TestServer CreateServer2()
+        {
+            return new TestServer(new WebHostBuilder()
+                .ConfigureServices(services =>
+                {
+                    services
+                        .AddApiAuthentication("api", options =>
+                        {
+                            options.Authority = "https://foo.com";
+                            options.ApiName = "api1";
+                        });
+                })
+                .Configure(app =>
+                {
+                    app.UseAuthentication();
+
+                    app.Use((context, next) =>
+                    {
+                        var user = context.User;
+
+                        if (user.Identity.IsAuthenticated)
+                        {
+                            context.Response.StatusCode = 200;
+                        }
+                        else
+                        {
+                            context.Response.StatusCode = 401;
+                        }
+
+                        return Task.CompletedTask;
+                    });
+                }));
+        }
+
+        public static HttpClient CreateClient2()
+        {
+            return CreateServer2().CreateClient();
+        }
+
         public static HttpClient CreateClient(Action<IdentityServerAuthenticationOptions> options)
         {
             return CreateServer(options).CreateClient();
