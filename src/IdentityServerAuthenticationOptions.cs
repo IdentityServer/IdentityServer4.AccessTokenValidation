@@ -174,7 +174,7 @@ namespace IdentityServer4.AccessTokenValidation
 
             if (DiscoveryDocumentRefreshInterval.HasValue)
             {
-                var parsedUrl = DiscoveryClient.ParseUrl(Authority);
+                var parsedUrl = DiscoveryEndpoint.ParseUrl(Authority);
 
                 var httpClient = new HttpClient(JwtBackChannelHandler ?? new HttpClientHandler())
                 {
@@ -254,20 +254,7 @@ namespace IdentityServer4.AccessTokenValidation
             introspectionOptions.CacheDuration = CacheDuration;
             introspectionOptions.CacheKeyPrefix = CacheKeyPrefix;
 
-            introspectionOptions.DiscoveryTimeout = BackChannelTimeouts;
-            introspectionOptions.IntrospectionTimeout = BackChannelTimeouts;
-
             introspectionOptions.DiscoveryPolicy.RequireHttps = RequireHttpsMetadata;
-
-            if (IntrospectionBackChannelHandler != null)
-            {
-                introspectionOptions.IntrospectionHttpHandler = IntrospectionBackChannelHandler;
-            }
-
-            if (IntrospectionDiscoveryHandler != null)
-            {
-                introspectionOptions.DiscoveryHttpHandler = IntrospectionDiscoveryHandler;
-            }
         }
     }
 }
