@@ -33,7 +33,7 @@ namespace build
 
                     if (sign.HasValue())
                     {
-                        Sign("IdentityModel.dll", "./src/bin/release");
+                        Sign("IdentityServer4.AccessTokenValidation.dll", "./src/bin/release");
                     }
                 });
 
