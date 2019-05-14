@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Brock Allen & Dominick Baier. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See LICENSE in the project root for license information.
 
+using System;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -56,20 +57,23 @@ namespace IdentityServer4.AccessTokenValidation
                     {
                         _logger.LogTrace("Token is a JWT and is supported.");
 
-                        
-                        Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, jwtScheme);
+
+                        Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name,
+                            jwtScheme);
                         return await Context.AuthenticateAsync(jwtScheme);
                     }
                     else if (Options.SupportsIntrospection)
                     {
                         _logger.LogTrace("Token is a reference token and is supported.");
 
-                        Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name, introspectionScheme);
+                        Context.Items.Add(IdentityServerAuthenticationDefaults.EffectiveSchemeKey + Scheme.Name,
+                            introspectionScheme);
                         return await Context.AuthenticateAsync(introspectionScheme);
                     }
                     else
                     {
-                        _logger.LogTrace("Neither JWT nor reference tokens seem to be correctly configured for incoming token.");
+                        _logger.LogTrace(
+                            "Neither JWT nor reference tokens seem to be correctly configured for incoming token.");
                     }
                 }
 
@@ -80,6 +84,11 @@ namespace IdentityServer4.AccessTokenValidation
                 }
 
                 return AuthenticateResult.NoResult();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                return AuthenticateResult.Fail(ex);
             }
             finally
             {
