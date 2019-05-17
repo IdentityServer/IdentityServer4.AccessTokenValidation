@@ -1,10 +1,9 @@
-using System;
+using FluentAssertions;
+using IdentityModel.Client;
+using System.Net;
 using System.Threading.Tasks;
 using Tests.Util;
 using Xunit;
-using FluentAssertions;
-using System.Net;
-using System.Net.Http;
 
 namespace Tests
 {

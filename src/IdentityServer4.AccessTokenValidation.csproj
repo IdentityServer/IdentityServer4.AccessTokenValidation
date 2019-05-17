@@ -1,6 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+    <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <Description>ASP.NET Core authentication handler to validate JWT and reference tokens from IdentityServer4</Description>
     <Authors>Brock Allen;Dominick Baier</Authors>
     <PackageId>IdentityServer4.AccessTokenValidation</PackageId>
@@ -17,7 +24,7 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="3.5.0" />
+    <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="4.0.0-preview.2" />
     
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="2.1.0" />
