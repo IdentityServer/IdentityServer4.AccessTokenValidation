@@ -135,6 +135,11 @@ namespace IdentityServer4.AccessTokenValidation
         public JwtBearerEvents JwtBearerEvents { get; set; } = new JwtBearerEvents();
 
         /// <summary>
+        /// events for introspection endpoint
+        /// </summary>
+        public OAuth2IntrospectionEvents OAuth2IntrospectionEvents { get; set; } = new OAuth2IntrospectionEvents();
+
+        /// <summary>
         /// Specifies how often the cached copy of the discovery document should be refreshed.
         /// If not set, it defaults to the default value of Microsoft's underlying configuration manager (which right now is 24h).
         /// If you need more fine grained control, provide your own configuration manager on the JWT options.
@@ -255,6 +260,12 @@ namespace IdentityServer4.AccessTokenValidation
             introspectionOptions.CacheKeyPrefix = CacheKeyPrefix;
 
             introspectionOptions.DiscoveryPolicy.RequireHttps = RequireHttpsMetadata;
+
+            introspectionOptions.Events = new OAuth2IntrospectionEvents
+            {
+                OnAuthenticationFailed = e => OAuth2IntrospectionEvents.AuthenticationFailed(e),
+                OnCreatingTicket = e => OAuth2IntrospectionEvents.OnCreatingTicket(e),
+            };
         }
     }
 }
