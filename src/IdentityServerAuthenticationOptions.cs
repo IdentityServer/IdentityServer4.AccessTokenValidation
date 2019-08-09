@@ -5,7 +5,6 @@ using IdentityModel.AspNetCore.OAuth2Introspection;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
@@ -108,20 +107,11 @@ namespace IdentityServer4.AccessTokenValidation
         /// </summary>
         public TimeSpan? JwtValidationClockSkew { get; set; }
 
+        // todo: switch to factory approach
         /// <summary>
         /// back-channel handler for JWT middleware
         /// </summary>
         public HttpMessageHandler JwtBackChannelHandler { get; set; }
-
-        /// <summary>
-        /// back-channel handler for introspection endpoint
-        /// </summary>
-        public HttpMessageHandler IntrospectionBackChannelHandler { get; set; }
-
-        /// <summary>
-        /// back-channel handler for introspection discovery endpoint
-        /// </summary>
-        public HttpMessageHandler IntrospectionDiscoveryHandler { get; set; }
 
         /// <summary>
         /// timeout for back-channel operations
@@ -264,7 +254,7 @@ namespace IdentityServer4.AccessTokenValidation
             introspectionOptions.Events = new OAuth2IntrospectionEvents
             {
                 OnAuthenticationFailed = e => OAuth2IntrospectionEvents.AuthenticationFailed(e),
-                OnCreatingTicket = e => OAuth2IntrospectionEvents.OnCreatingTicket(e),
+                OnTokenValidated = e => OAuth2IntrospectionEvents.OnTokenValidated(e),
             };
         }
     }
