@@ -29,11 +29,9 @@
   </ItemGroup>
   
   <ItemGroup>
-    <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="4.0.0-preview.21" />
+    <PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="4.0.0" />
     
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0-preview7.19365.7" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.0.0-preview7.19365.7" />
-    
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0-preview9.19424.4" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19367-01" PrivateAssets="All" />
     
     <PackageReference Include="minver" Version="1.1.0">
