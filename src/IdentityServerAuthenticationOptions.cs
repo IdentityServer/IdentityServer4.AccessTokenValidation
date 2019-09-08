@@ -22,7 +22,7 @@ namespace IdentityServer4.AccessTokenValidation
     public class IdentityServerAuthenticationOptions : AuthenticationSchemeOptions
     {
         static readonly Func<HttpRequest, string> InternalTokenRetriever = request => request.HttpContext.Items[IdentityServerAuthenticationDefaults.TokenItemsKey] as string;
-        
+
         /// <summary>
         /// Base-address of the token issuer
         /// </summary>
@@ -68,11 +68,6 @@ namespace IdentityServer4.AccessTokenValidation
         /// Claim type for role
         /// </summary>
         public string RoleClaimType { get; set; } = "role";
-
-        /// <summary>
-        /// Specifies inbound claim type map for JWT tokens (mainly used to disable the annoying default behavior of the MS JWT handler)
-        /// </summary>
-        public Dictionary<string, string> InboundJwtClaimTypeMap { get; set; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Specifies whether caching is enabled for introspection responses (requires a distributed cache implementation)
@@ -212,16 +207,14 @@ namespace IdentityServer4.AccessTokenValidation
                 jwtOptions.TokenValidationParameters.ClockSkew = JwtValidationClockSkew.Value;
             }
 
-            if (InboundJwtClaimTypeMap != null)
+            var handler = new JwtSecurityTokenHandler
             {
-                var handler = new JwtSecurityTokenHandler
-                {
-                    InboundClaimTypeMap = InboundJwtClaimTypeMap
-                };
+                MapInboundClaims = false
+            };
 
-                jwtOptions.SecurityTokenValidators.Clear();
-                jwtOptions.SecurityTokenValidators.Add(handler);
-            }
+            jwtOptions.SecurityTokenValidators.Clear();
+            jwtOptions.SecurityTokenValidators.Add(handler);
+
         }
 
         internal void ConfigureIntrospection(OAuth2IntrospectionOptions introspectionOptions)
