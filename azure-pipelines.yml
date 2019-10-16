@@ -41,4 +41,4 @@ jobs:
       packagesToPush: 'artifacts/*.nupkg'
       nuGetFeedType: external
       publishFeedCredentials: 'MyGet'
-      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
