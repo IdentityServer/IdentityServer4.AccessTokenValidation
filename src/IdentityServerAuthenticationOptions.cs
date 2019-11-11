@@ -85,7 +85,7 @@ namespace IdentityServer4.AccessTokenValidation
         public string CacheKeyPrefix { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the policay for the introspection discovery document.
+        /// Gets or sets the policy for the introspection discovery document.
         /// </summary>
         /// <value>
         /// The introspection discovery policy.
