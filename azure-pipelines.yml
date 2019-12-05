@@ -11,8 +11,7 @@ jobs:
     displayName: 'Install .NET Core 3.x SDK'
     inputs:
       packageType: 'sdk'
-      version: '3.0.100'
-      includePreviewVersions: true
+      useGlobalJson: true
   - task: Bash@3
     displayName: 'Build Script'
     inputs:
@@ -27,8 +26,7 @@ jobs:
     displayName: 'Install .NET Core 3.x SDK'
     inputs:
       packageType: 'sdk'
-      version: '3.0.100'
-      includePreviewVersions: true
+      useGlobalJson: true
   - task: PowerShell@2
     displayName: 'Build Script'
     inputs:
